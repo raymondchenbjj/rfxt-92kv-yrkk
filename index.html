@@ -105,6 +105,25 @@ a{color:var(--accent)}
 .fbm-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
 .fbm.met .fbm-bar i{background:var(--sage)}
 .fbm-sub{font-size:13px;color:var(--muted)}
+.qcat{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:0 0 14px;overflow:hidden}
+.qcat>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;flex-wrap:wrap}
+.qcat>summary::-webkit-details-marker{display:none}
+.qcat>summary h3{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;margin:0}
+.qcat>summary .qs{font-size:12.5px;color:var(--muted)}
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 18px 16px}
+.quote{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:8px;position:relative}
+.quote.chosen{border-color:var(--sage);box-shadow:0 0 0 2px var(--sage-soft)}
+.quote label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.quote input,.quote textarea{display:block;width:100%;margin-top:2px;font:inherit;font-size:14px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.quote textarea{min-height:90px;resize:vertical}
+.quote .row2{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.quote .allin{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:600;line-height:1}
+.quote .acts{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.quote .choose{border:1px solid var(--sage);background:none;color:var(--sage);border-radius:99px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.quote.chosen .choose{background:var(--sage);color:var(--card)}
+.quote .qx{position:absolute;top:6px;right:8px}
+.qadd{margin:0 18px 16px}
+@media (max-width:860px){.qgrid{grid-template-columns:1fr}}
 .x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
 .addrow{margin-top:10px;background:none;border:1px dashed var(--line);color:var(--accent);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -189,6 +208,8 @@ a{color:var(--accent)}
   <button data-t="timeline" class="on">Timeline</button>
   <button data-t="budget">Budget</button>
   <button data-t="addons">Food &amp; Menu</button>
+  <button data-t="quotes">Vendor Quotes</button>
+  <button data-t="guests">Guest Count</button>
   <button data-t="forms">Venue Forms</button>
   <button data-t="contacts">Contacts</button>
   <button data-t="tips">Gratuities</button>
@@ -337,6 +358,40 @@ a{color:var(--accent)}
   </div>
 </section>
 
+<section class="panel" id="quotes">
+  <div class="card">
+    <h3>Vendor Quotes <span class="tag next" id="qProg"></span></h3>
+    <p class="note" style="margin:0">Goal: at least 3 quotes for every vendor before choosing. Enter each quote's price and tax rate to see the all in cost. Tap <b>Choose</b> on the winner and its all in price is copied to that vendor's <b>Actual</b> column on the Budget tab.</p>
+  </div>
+  <div id="qList"></div>
+</section>
+
+<section class="panel" id="guests">
+  <div class="kpis">
+    <div class="kpi"><span>Projected guests</span><b id="gTot">0</b></div>
+    <div class="kpi"><span>Contract guarantee</span><b>160</b></div>
+    <div class="kpi"><span>vs guarantee</span><b id="gGap">0</b></div>
+    <div class="kpi"><span>Cost per guest over 160</span><b id="gPer">$0</b></div>
+  </div>
+  <div class="fbm" id="gMeter" style="background:var(--card)">
+    <div class="fbm-top"><span>Toward the 160 guarantee</span><b id="gMeterVal"></b></div>
+    <div class="fbm-bar"><i id="gBar"></i></div>
+    <div class="fbm-sub" id="gSub"></div>
+  </div>
+  <div class="card">
+    <h3>Groom's side <span class="tag done" id="g1Tag"></span></h3>
+    <p class="note">From the invitation list spreadsheet (Oct 22, 2026). Names stay in the spreadsheet.</p>
+    <table><tr><th>Group</th><th class="num" style="text-align:right">Invitations</th><th class="num" style="text-align:right">People</th></tr><tbody id="g1Rows"></tbody></table>
+    <p class="note" style="margin-top:10px">To fix on the list: one entry has "??" for headcount (not counted), one is 3.5 people, and no one has an A/B/C tier yet, so there's nothing to cut from if you go over.</p>
+  </div>
+  <div class="card">
+    <h3>Bride's side</h3>
+    <p class="note">Not on the list yet. Enter an estimate until it's added, including who can realistically travel.</p>
+    <div class="vgrid" style="grid-template-columns:1fr 1fr"><label>Estimated people<input id="g2In" inputmode="numeric" placeholder="0"></label></div>
+    <button class="addrow" id="gUse">Use projected total as expected guests on the Budget tab</button>
+  </div>
+</section>
+
 <section class="panel" id="forms">
   <div class="phase">
     <div class="phase-h"><h2>Welcome Packet Forms</h2><span class="when">Complete with the venue coordinator &amp; the venue coordination team</span></div>
@@ -401,8 +456,9 @@ const phases = [
   ["Create folders for vendor contracts and vendor info","Saving them in the Wedding Planning folder","Packet"]
  ]},
  {id:"catch", title:"Catch Up", when:"12 to 8 month items &middot; by end of Nov 2026", due:new Date(2026,10,30), items:[
-  ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this",""],
-  ["Make the wedding guest list","A/B/C tiers. You pay for 160 either way, so up to 160 adds no food cost",""],
+  ["Get at least 3 quotes for every vendor","Track them in the Vendor Quotes tab",""],
+  ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this. First photo quote is in",""],
+  ["Make the wedding guest list","Groom's side drafted (~89). Add the other side and A/B/C tiers. Up to 160 adds no food cost",""],
   ["Finalize guest invitation list","",""],
   ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
   ["Hire florist and/or event decorator","",""],
@@ -489,6 +545,81 @@ document.getElementById("tabs").addEventListener("click",e=>{
 document.getElementById("print").onclick=()=>window.print();
 document.getElementById("reset").onclick=()=>{state={};save();render();};
 render();
+
+// ---------- Guest count ----------
+const G1=[["Family", 39, 17], ["Friends (Flushing)", 17.5, 13], ["Friends (BJJ)", 3, 3], ["Friends (College)", 19, 16], ["Friends (HS)", 10, 9]];
+function gCalc(){
+  const g1=G1.reduce((a,r)=>a+r[1],0), inv=G1.reduce((a,r)=>a+r[2],0), g2=num(B.g2||0), tot=Math.ceil(g1+g2), gap=tot-160;
+  const mult=(1+num(B.fee)/100)*(1+num(B.tax)/100);
+  document.getElementById("g1Rows").innerHTML=G1.map(r=>`<tr><td>${r[0]}</td><td style="text-align:right">${r[2]}</td><td style="text-align:right">${r[1]}</td></tr>`).join("")+`<tr><td><b>Total</b></td><td style="text-align:right"><b>${inv}</b></td><td style="text-align:right"><b>${g1}</b></td></tr>`;
+  document.getElementById("g1Tag").textContent=`${Math.ceil(g1)} people`;
+  document.getElementById("gTot").textContent=tot;
+  const G=document.getElementById("gGap"); G.textContent=gap>0?`+${gap} over`:gap===0?"Exactly 160":`${-gap} under`; G.className=gap>0?"neg":"pos";
+  document.getElementById("gPer").textContent=$c(num(B.pp)*mult);
+  document.getElementById("gMeterVal").textContent=`${tot} of 160`;
+  document.getElementById("gBar").style.width=Math.min(100,tot/160*100)+"%";
+  document.getElementById("gMeter").classList.toggle("met",tot>=160);
+  document.getElementById("gSub").innerHTML= gap>0
+    ? `${gap} guests over the guarantee would add about <b>${$f(gap*num(B.pp)*mult)}</b> to the venue bill (fee and tax included). Time to use A/B/C tiers.`
+    : `${-gap} more guests fit at no extra food cost, since you pay for 160 either way.${B.g2?"":" Add the other side's estimate below to see the real total."}`;
+}
+document.getElementById("g2In").addEventListener("input",e=>{B.g2=e.target.value;bsave();gCalc();});
+document.getElementById("gUse").onclick=()=>{const g1=G1.reduce((a,r)=>a+r[1],0);B.guests=Math.ceil(g1+num(B.g2||0));document.getElementById("vGuests").value=B.guests;bsave();menuRender();bCalc();document.getElementById("gUse").textContent="Done: Budget now uses "+B.guests+" guests";};
+
+// ---------- Vendor quotes ----------
+const QCATS=[["Photography","Photographer"],["Videography","Videographer / content creator"],["Photo booth","Photo booth"],["Florals & decor","Florals & decor"],["Band or DJ","Band or DJ"],["Bilingual MC / singer","Bilingual MC / mashup singer"],["Officiant","Officiant"],["Hair & makeup","Hair & makeup (incl. trial)"],["Transportation","Transportation"],["Invitations & stationery","Save the dates & invitations"],["Tux & dress rentals","Groomsmen & bridesmaid rentals"],["Favors","Favors & gift bags"],["Rehearsal dinner","Rehearsal dinner"],["Wedding bands","Wedding bands"]];
+const QPRE={"Photography": [{"v": "Photographer quote 1", "c": "", "price": 5500, "tax": 8.625, "inc": "Up to 10 hrs unlimited shooting\nMain photographer + lighting assistant\n2nd photographer\nEngagement shoot (NYC or LI), all hi res files\nCustom album 9.5x13, 60 photos\nPersonal webpage of all images\nDigital download of all hi res files\nPrints: 3 5x7, 2 8x10, 1 11x14", "notes": "Quoted Oct 22, 2026. $5,500 + tax with engagement shoot + 60 photo album. Base package (no engagement, no album) starts at $4,000 + tax. Add ons: engagement shoot, 50 photo album, parent albums 8x10. Sample gallery at this venue on their Pixieset."}], "Photo booth": [{"v": "Photo booth quote 1", "c": "", "price": 1200, "tax": 8.625, "inc": "4 hr reception\nProps\nUnlimited strips for guests\nExtra copy of strips for a scrapbook\nUSB of all digital files the same night", "notes": "Quoted Oct 22, 2026 alongside the photo package. $1,200 + tax"}], "Videography": [{"v": "Videographer quote 1", "c": "", "price": 3200, "tax": 8.625, "inc": "Up to 10 hrs coverage\nMain videographer + shooting assistant\n5 to 7 min trailer set to your songs\nFull edit movie style video, approx 1 to 1.5 hrs, live audio + music\nOpening highlight + love story recap ending", "notes": "Quoted Oct 22, 2026. $3,200 + tax. Add ons: drone (2 hr slot); upgrade assistant to a 2nd main videographer for the groom's getting ready location. Same company as photo quote; ask about a bundle discount"}]};
+const blankQ=()=>({v:"",c:"",price:"",tax:8.625,inc:"",notes:""});
+function qInit(){
+  B.quotes=B.quotes||{}; B.qChosen=B.qChosen||{};
+  if(!B._q1){ B._q2=true; Object.entries(QPRE).forEach(([k,arr])=>{B.quotes[k]=(B.quotes[k]||[]).filter(q=>q.v||q.price);B.quotes[k]=arr.concat(B.quotes[k]);}); B._q1=true; }
+  if(!B._q2){ ["Videography","Photography"].forEach(k=>{ if(k==="Videography"){ B.quotes[k]=(B.quotes[k]||[]).filter(q=>q.v||q.price); B.quotes[k]=QPRE[k].concat(B.quotes[k]); } else if(B.quotes[k]&&B.quotes[k][0]&&num(B.quotes[k][0].price)===5500){ B.quotes[k][0].notes=QPRE[k][0].notes; } }); B._q2=true; }
+  QCATS.forEach(([k])=>{ const a=B.quotes[k]=B.quotes[k]||[]; while(a.length<3) a.push(blankQ()); });
+}
+const qAll=q=>num(q.price)*(1+num(q.tax)/100);
+const qFilled=q=>num(q.price)>0;
+function qRender(){
+  qInit();
+  let done=0;
+  document.getElementById("qList").innerHTML=QCATS.map(([k])=>{
+    const a=B.quotes[k], n=a.filter(qFilled).length, ch=B.qChosen[k];
+    if(n>=3) done++;
+    const prices=a.filter(qFilled).map(qAll), lo=prices.length?Math.min(...prices):0;
+    return `<details class="qcat" ${n||k==="Photography"?"open":""}><summary><h3>${k}</h3><span class="qs">${n} of 3 quotes${ch!==undefined&&a[ch]?` &middot; chosen: ${esc(a[ch].v||"Quote "+(ch+1))}`:""}${prices.length>1?` &middot; lowest ${$f(lo)}`:""}</span></summary>
+      <div class="qgrid">`+a.map((q,i)=>`<div class="quote ${ch===i?"chosen":""}" data-qc="${esc(k)}" data-qi="${i}">
+        <button class="x qx" data-qdel title="Remove">&times;</button>
+        <label>Vendor<input data-qf="v" value="${esc(q.v)}" placeholder="Quote ${i+1}"></label>
+        <label>Contact<input data-qf="c" value="${esc(q.c)}" placeholder="Email or phone"></label>
+        <div class="row2"><label>Price ($)<input data-qf="price" inputmode="decimal" value="${q.price===""?"":num(q.price)}"></label><label>Tax %<input data-qf="tax" inputmode="decimal" value="${q.tax}"></label></div>
+        <label>What's included<textarea data-qf="inc">${esc(q.inc)}</textarea></label>
+        <label>Notes<input data-qf="notes" value="${esc(q.notes)}"></label>
+        <div class="acts"><div><label>All in</label><div class="allin" data-qall>${qFilled(q)?$f(qAll(q)):"\u2014"}</div></div><button class="choose" data-qchoose>${ch===i?"Chosen":"Choose"}</button></div>
+      </div>`).join("")+`</div><button class="addrow qadd" data-qadd="${esc(k)}">+ Add quote</button></details>`;
+  }).join("");
+  const pr=document.getElementById("qProg"); pr.textContent=`${done} of ${QCATS.length} vendors have 3+ quotes`; pr.className="tag "+(done===QCATS.length?"done":"next");
+}
+function qToBudget(k){
+  const cat=QCATS.find(c=>c[0]===k); if(!cat) return;
+  const i=B.qChosen[k], q=i!==undefined?B.quotes[k][i]:null;
+  let row=B.rows.find(r=>r.item===cat[1]);
+  if(!row && q){ row={item:cat[1],est:0,act:"",paid:"",note:""}; B.rows.push(row); }
+  if(row){ row.act = q&&qFilled(q) ? Math.round(qAll(q)) : ""; if(q) row.note=(q.v||"Chosen quote")+" (from Vendor Quotes)"; }
+  bRows(); bCalc();
+}
+document.getElementById("qList").addEventListener("input",e=>{
+  const f=e.target.dataset.qf; if(!f) return;
+  const box=e.target.closest(".quote"), k=box.dataset.qc, i=+box.dataset.qi, q=B.quotes[k][i];
+  q[f]=e.target.value; bsave();
+  if(f==="price"||f==="tax"){ box.querySelector("[data-qall]").textContent=qFilled(q)?$f(qAll(q)):"\u2014"; if(B.qChosen[k]===i){qToBudget(k);bsave();} }
+});
+document.getElementById("qList").addEventListener("change",e=>{ if(e.target.dataset.qf) qRender(); });
+document.getElementById("qList").addEventListener("click",e=>{
+  const add=e.target.closest("[data-qadd]"); if(add){ B.quotes[add.dataset.qadd].push(blankQ()); bsave(); qRender(); return; }
+  const box=e.target.closest(".quote"); if(!box) return;
+  const k=box.dataset.qc, i=+box.dataset.qi;
+  if(e.target.closest("[data-qchoose]")){ B.qChosen[k]= B.qChosen[k]===i?undefined:i; if(B.qChosen[k]===undefined) delete B.qChosen[k]; qToBudget(k); bsave(); qRender(); }
+  else if(e.target.closest("[data-qdel]")){ B.quotes[k].splice(i,1); if(B.qChosen[k]===i){delete B.qChosen[k];qToBudget(k);} else if(B.qChosen[k]>i) B.qChosen[k]--; bsave(); qRender(); }
+});
 
 // ---------- Menu selections ----------
 const ST=(name,desc,subs)=>({name,desc,subs:subs||[]});
@@ -713,7 +844,7 @@ function bInit(){
   document.getElementById("bTotal").value=num(B.total).toLocaleString();
   document.getElementById("vGuests").value=B.guests;
   document.getElementById("vPP").value=B.pp;
-  bRows(); addonRender(); menuRender(); bCalc();
+  bRows(); addonRender(); menuRender(); qRender(); document.getElementById("g2In").value=B.g2||""; bCalc();
 }
 function bCalc(){
   const V=venue();
@@ -745,6 +876,7 @@ function bCalc(){
   set("tOverTxt",`With your add ons the bill is ${$f(V.sub)}, which makes each 5% line ${$f(c5)} and the total ${$f(700+c5*2)} to ${$f(1300+c5*2)}.`);
   document.getElementById("tBasis").innerHTML=`Based on the required Minimum Financial Requirement of <b>${$f(RMD)}</b> (${V.min} guaranteed guests &times; ${$c(V.pp)} + ${$f(V.cer)} ceremony fee), before the 22% facility fee and tax. This is the least the bill can be, so it's the floor for tips. The contract says the facility fee is <b>not</b> a gratuity, so staff tips are separate.`;
   addonCalc(V);
+  gCalc();
   const fbMin=V.base, fbUsed=V.fb, pctMin=fbMin?Math.min(100,fbUsed/fbMin*100):0, fbOver=fbUsed-fbMin;
   document.getElementById("fbmVal").textContent=`${$f(fbUsed)} of ${$f(fbMin)}`;
   document.getElementById("fbmBar").style.width=pctMin+"%";
