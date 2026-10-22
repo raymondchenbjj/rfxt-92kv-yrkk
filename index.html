@@ -216,9 +216,8 @@ a{color:var(--accent)}
     </div>
     <div class="vgrid">
       <label>Expected guests<input id="vGuests" inputmode="numeric"></label>
-      <label>Contract guarantee<input id="vMin" inputmode="numeric"></label>
       <label>Price per person ($)<input id="vPP" inputmode="decimal"></label>
-      <label>Other upcharges ($)<input id="vUp" inputmode="numeric" placeholder="0"></label>
+      <label>Contract guarantee<span style="display:block;margin-top:3px;padding:7px 9px;font-size:15px;color:var(--ink)">160 guests (fixed)</span></label>
     </div>
     <div class="fbm" id="fbm">
       <div class="fbm-top"><span>Food &amp; beverage minimum</span><b id="fbmVal">$0 of $0</b></div>
@@ -232,7 +231,6 @@ a{color:var(--accent)}
       <tr><td id="vAOlbl">Food add ons (from the Food Add Ons tab)</td><td class="num" id="vAO">$0.00</td></tr>
       <tr class="auto"><td>Less: guarantee credit applied to add ons</td><td class="num" id="vAOcred">$0.00</td></tr>
       <tr><td>Ceremony fee</td><td class="num" id="vCer">$0</td></tr>
-      <tr><td>Other upcharges (extra bartender, etc.)</td><td class="num" id="vUpAmt">$0</td></tr>
       <tr><td><b>Subtotal</b> (minimum is $31,640)</td><td class="num" id="vSub">$0</td></tr>
       <tr class="auto"><td>Facility fee 22% (taxable; not a gratuity)</td><td class="num" id="vFee">$0</td></tr>
       <tr class="auto"><td>NY sales tax 8.625% (on subtotal + facility fee)</td><td class="num" id="vTaxAmt">$0</td></tr>
@@ -680,6 +678,7 @@ B.rows.forEach(r=>{if(r.note==="Send contract to venue; Sunday 8 PM sound limit"
  if(r.item==="Groom tuxedo"){r.item="Groom tuxedo (white)";if(!r.note)r.note="Ivory/white dinner jacket, black tux trousers";}
  if(r.item==="Groomsmen & bridesmaid rentals"&&r.note==="Usually paid by each attendant; enter if you cover it")r.note="Black tuxedos + floor length dresses; usually paid by each attendant";});
 if(!B.rows.some(r=>r.item.startsWith("Groomsmen & bridesmaid"))){const i=B.rows.findIndex(r=>r.item.startsWith("Groom tuxedo"));B.rows.splice(i+1,0,{item:"Groomsmen & bridesmaid rentals",est:0,act:"",paid:"",note:"Black tuxedos + floor length dresses; usually paid by each attendant"});}
+B.min=160; B.up=0;
 const bsave=()=>{try{localStorage.setItem(BK,JSON.stringify(B))}catch(e){}};
 bsave();
 const num=v=>{const n=parseFloat(String(v).replace(/[$,\s]/g,""));return isNaN(n)?0:n};
@@ -713,9 +712,7 @@ function paySched(){
 function bInit(){
   document.getElementById("bTotal").value=num(B.total).toLocaleString();
   document.getElementById("vGuests").value=B.guests;
-  document.getElementById("vMin").value=B.min;
   document.getElementById("vPP").value=B.pp;
-  document.getElementById("vUp").value=B.up||"";
   bRows(); addonRender(); menuRender(); bCalc();
 }
 function bCalc(){
@@ -727,7 +724,7 @@ function bCalc(){
   set("vFB",$c(V.base));
   const nSel=Object.values(B.addons||{}).filter(Boolean).length;
   set("vAOlbl",`Food add ons (${nSel} item${nSel===1?"":"s"} from the Food Add Ons tab, menu price)`);
-  set("vAO",$c(V.A.sum)); set("vAOcred",(V.A.sum?"\u2212":"")+$c(V.base-(V.fb-V.A.sum)>0?Math.min(V.A.sum,V.base-V.g*V.pp):0)); set("vCer",$c(V.cer)); set("vUpAmt",$c(V.up)); set("vSub",$c(V.sub));
+  set("vAO",$c(V.A.sum)); set("vAOcred",(V.A.sum?"\u2212":"")+$c(V.base-(V.fb-V.A.sum)>0?Math.min(V.A.sum,V.base-V.g*V.pp):0)); set("vCer",$c(V.cer)); set("vSub",$c(V.sub));
   set("vFee",$c(V.fee)); set("vTaxAmt",$c(V.tax)); set("vGrand",$c(V.grand));
   set("vTip",$f(V.tipMid)); set("vTotal",$f(V.grand+V.tipMid));
   let oE=0,oA=0,oP=0; B.rows.forEach(r=>{oE+=num(r.est);oA+=num(r.act);oP+=num(r.paid)});
@@ -748,13 +745,13 @@ function bCalc(){
   set("tOverTxt",`With your add ons the bill is ${$f(V.sub)}, which makes each 5% line ${$f(c5)} and the total ${$f(700+c5*2)} to ${$f(1300+c5*2)}.`);
   document.getElementById("tBasis").innerHTML=`Based on the required Minimum Financial Requirement of <b>${$f(RMD)}</b> (${V.min} guaranteed guests &times; ${$c(V.pp)} + ${$f(V.cer)} ceremony fee), before the 22% facility fee and tax. This is the least the bill can be, so it's the floor for tips. The contract says the facility fee is <b>not</b> a gratuity, so staff tips are separate.`;
   addonCalc(V);
-  const fbMin=V.base, fbUsed=V.g*V.pp+V.A.sum, pctMin=fbMin?Math.min(100,fbUsed/fbMin*100):0, gap=fbMin-fbUsed;
+  const fbMin=V.base, fbUsed=V.fb, pctMin=fbMin?Math.min(100,fbUsed/fbMin*100):0, fbOver=fbUsed-fbMin;
   document.getElementById("fbmVal").textContent=`${$f(fbUsed)} of ${$f(fbMin)}`;
   document.getElementById("fbmBar").style.width=pctMin+"%";
-  document.getElementById("fbm").classList.toggle("met",gap<=0);
-  document.getElementById("fbmSub").innerHTML= gap>0
-    ? `${Math.round(pctMin)}% used: ${V.g} guests &times; ${$c(V.pp)}${V.A.sum?` + ${$f(V.A.sum)} food add ons`:""}. <b>${$f(gap)}</b> left before you pay more (about ${$f(gap*AMULT())} all in). You're billed the full minimum either way.`
-    : `Minimum met. You're ${$f(-gap)} over it, so each extra dollar of food now adds to the bill (about $1.33 with fee and tax).`;
+  document.getElementById("fbm").classList.toggle("met",fbUsed>=fbMin);
+  document.getElementById("fbmSub").innerHTML= fbOver>0.005
+    ? `Minimum met. Wedding Package ${$f(fbMin)} (${V.min} &times; ${$c(V.pp)}) plus ${$f(fbOver)} of food add ons beyond your guest credit.`
+    : `Minimum met by the Wedding Package estimate (${V.billed} &times; ${$c(V.pp)}).${V.credit>0?` You still have <b>${$f(V.credit)}</b> of unused guest credit for add ons or vendor meals (about ${$f(V.credit*AMULT())} all in).`:""}`;
 }
 document.getElementById("budget").addEventListener("input",e=>{
   const el=e.target, map={bTotal:"total",vGuests:"guests",vMin:"min",vPP:"pp",vUp:"up"};
