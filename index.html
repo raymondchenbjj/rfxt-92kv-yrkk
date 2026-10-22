@@ -93,8 +93,8 @@ a{color:var(--accent)}
 .opts label.sel{background:var(--sage-soft);border-color:var(--sage);color:var(--ink)}
 .opts label.dis{opacity:.45;cursor:not-allowed}
 .opts input{display:none}
-.sub{margin:10px 18px 0 32px;padding-left:12px;border-left:2px solid var(--accent-soft)}
-.sub .mch{padding:8px 0;border:none}
+.msub{margin:10px 18px 0 32px;padding-left:12px;border-left:2px solid var(--accent-soft)}
+.msub .mch{padding:8px 0;border:none}
 .ao td:first-child{width:36px}
 .ao .nm{font-weight:500}
 .ao .ds{display:block;font-size:12.5px;color:var(--muted)}
@@ -115,6 +115,40 @@ a{color:var(--accent)}
 .incl li::before{content:"\2713";position:absolute;left:2px;color:var(--sage);font-weight:700}
 .hint{background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:12px}
 @media (max-width:640px){
+  body{font-size:15px}
+  .wrap{padding:20px 16px 64px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;margin-left:-16px;margin-right:-16px;padding:2px 16px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:none;padding:10px 15px}
+  input,select,textarea,.bt input,.vgrid input{font-size:16px!important}
+  .kpi input{font-size:26px!important}
+  .bt{min-width:0}
+  .scroll{margin:0;overflow-x:visible}
+  .phase-h{padding:14px}
+  ul.check li{padding:11px 14px}
+  ul.check input{width:22px;height:22px}
+  .card{padding:16px 14px}
+  .bt td,.bt th{font-size:14px}
+  table.stack colgroup,table.stack thead,table.stack tr:has(th){display:none}
+  table.stack,table.stack tbody,table.stack tfoot{display:block}
+  table.stack tr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;padding:12px 0;border-bottom:1px solid var(--line);position:relative}
+  table.stack td{display:block;border:none;padding:0;text-align:left!important}
+  table.stack td.full{grid-column:1/-1}
+  table.stack td.hidem{display:none}
+  table.stack td input{text-align:left!important;padding:6px 8px;border:1px solid var(--line);background:var(--bg)}
+  table.stack td[data-label]::before{content:attr(data-label);display:block;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;font-style:normal}
+  table.vend td.full:first-child{padding-right:36px}
+  table.vend td.xcell{position:absolute;top:10px;right:0}
+  table.vend td.xcell .x{font-size:22px;padding:4px 8px}
+  table.stack tfoot tr{border-top:2px solid var(--ink);border-bottom:none}
+  table.stack tfoot td{font-weight:600}
+  table.ao td.cb{position:absolute;left:0;top:13px}
+  table.ao td.cb input{width:20px!important;height:20px}
+  table.ao td.itm{padding-left:32px}
+  table.ao td.ds{display:block!important}
+  .incl{columns:1}
+  .opts label{padding:8px 12px;font-size:14px}
+  .msub{margin:8px 0 0 6px}
   .kpis,.vgrid{grid-template-columns:1fr 1fr}
   .incl{columns:1}
   .stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -229,11 +263,11 @@ a{color:var(--accent)}
   <div class="card">
     <h3>Not Included: Outside Vendors &amp; Extras</h3>
     <p class="note">Starting estimates for a NY metro mid range wedding. Type over any number; changes save automatically.</p>
-    <div class="scroll"><table class="bt">
+    <div class="scroll"><table class="bt stack vend">
       <colgroup><col style="width:30%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:27%"><col style="width:4%"></colgroup>
       <thead><tr><th>Item</th><th class="num">Estimate</th><th class="num">Actual</th><th class="num">Paid</th><th>Notes</th><th></th></tr></thead>
       <tbody id="bRows"></tbody>
-      <tfoot><tr><td>Outside vendors total</td><td class="num" id="oEst">$0</td><td class="num" id="oAct">$0</td><td class="num" id="oPaid">$0</td><td></td><td></td></tr></tfoot>
+      <tfoot><tr><td class="full">Outside vendors total</td><td class="num" data-label="Estimate" id="oEst">$0</td><td class="num" data-label="Actual" id="oAct">$0</td><td class="num" data-label="Paid" id="oPaid">$0</td><td class="hidem"></td><td class="hidem"></td></tr></tfoot>
     </table></div>
     <button class="addrow" id="addRow">+ Add line</button>
   </div>
@@ -357,27 +391,27 @@ const phases = [
   ["Create folders for vendor contracts and vendor info","Saving them in the Wedding Planning folder","Packet"]
  ]},
  {id:"catch", title:"Catch Up", when:"12 to 8 month items &middot; by end of Nov 2026", due:new Date(2026,10,30), items:[
-  ["Make the wedding guest list","A/B/C tiers, ~120 to 130 expected",""],
-  ["Create an inspiration mood board","",""],
-  ["Decide if you still want an outside coordinator","Contract includes planning services and a day of coordinator",""],
   ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this",""],
-  ["Hire florist and/or event decorator","",""],
-  ["Get the wedding dress","Done",""],
-  ["Choose the bridal party","",""],
+  ["Make the wedding guest list","A/B/C tiers. You pay for 160 either way, so up to 160 adds no food cost",""],
   ["Finalize guest invitation list","",""],
-  ["Take engagement photos","",""],
   ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
-  ["Send out save the date cards","",""],
+  ["Hire florist and/or event decorator","",""],
+  ["Decide if you still want an outside coordinator","Contract includes planning services and a day of coordinator",""],
+  ["Send out save the date cards","Aim for December, after the guest list is set",""],
+  ["Choose the bridal party","",""],
+  ["Take engagement photos","",""],
+  ["Get the wedding dress","Done",""],
+  ["Create an inspiration mood board","",""],
   ["Start a song list for ceremony and reception","",""],
   ["Consider honeymoon options","",""]
  ]},
- {m:7, items:[["Book rehearsal dinner venue","Can be held at the venue",""],["Decide on a qipao for the dinner change","Custom or tailored qipaos can take 6 to 10 weeks",""],["Order decorations, linens, chargers, dance floor","",""],["Hire officiant","",""]]},
- {m:6, items:[["Pay venue deposit 2: $10,482.50","Due Jan 13, 2027. 3% card fee applies","Contract"],["Book transportation for you and guests","",""],["Meet invitation designers and finalize","Bilingual invitations",""],["Pick the rental styles for groomsmen and bridesmaids","Groomsmen in black tuxedos; bridesmaids in floor length dresses to match black tie",""]]},
- {m:5, items:[["Book honeymoon","",""],["Reserve groom's white tuxedo and groomsmen's black tuxedos","Ivory/white dinner jacket with black tux trousers for the groom; ivory photographs warmer than stark white. Rental shops book up for June weekends",""],["Choose groom's bow tie and boutonniere to set him apart","e.g. a different bow tie color or texture, or one that ties to the qipao",""],["Reserve bridesmaid dress rentals","Floor length to match the groomsmen's black tuxedos",""],["Shop attire for flower girl and ring bearer","",""]]},
+ {m:7, items:[["Book hair and makeup artist","Top artists book up for June weekends; trial comes later",""],["Book rehearsal dinner venue","Can be held at the venue",""],["Decide on a qipao for the dinner change","Custom or tailored qipaos can take 6 to 10 weeks",""],["Order decor and rentals (chargers, specialty linens or chairs)","Venue already includes tables, standard chairs, floor length linens and the dance floor",""],["Hire officiant","",""]]},
+ {m:6, items:[["Book transportation for you and guests","",""],["Meet invitation designers and finalize","Bilingual invitations",""],["Pick the rental styles for groomsmen and bridesmaids","Groomsmen in black tuxedos; bridesmaids in floor length dresses to match black tie",""]]},
+ {m:5, items:[["Pay venue deposit 2: $10,482.50","Due Jan 13, 2027. 3% card fee applies","Contract"],["Book honeymoon","",""],["Reserve groom's white tuxedo and groomsmen's black tuxedos","Ivory/white dinner jacket with black tux trousers for the groom; ivory photographs warmer than stark white. Rental shops book up for June weekends",""],["Choose groom's bow tie and boutonniere to set him apart","e.g. a different bow tie color or texture, or one that ties to the qipao",""],["Reserve bridesmaid dress rentals","Floor length to match the groomsmen's black tuxedos",""],["Shop attire for flower girl and ring bearer","",""]]},
  {m:4, items:[["Hair and makeup trial","",""],["Buy wedding bands","",""],["Purchase ceremonial items and flat lays","",""],["Schedule tasting at the venue","",""]]},
  {m:3, items:[["Collect attendants' measurements for rentals","Most rental shops want sizes 6 to 8 weeks out",""],["Pay venue deposit 3: $10,482.50","Due Mar 13, 2027","Contract"],["Set dates for bridal shower and bachelor/bachelorette","",""],["Order wedding favors","",""],["Write vows and select readings","",""],["Send out invitations","",""],["Schedule centerpiece sample","",""]]},
- {m:2, items:[["Wedding dress fitting","",""],["Qipao fitting","",""],["Pick up marriage license","NY license valid 60 days; 24 hour wait before ceremony",""],["Day of details: menu design, escort display, signage","",""]]},
- {m:1, items:[["Send band/DJ contract to the venue","Needed for technical requirements","Contract"],["Get vendor regulations signed by every vendor","Must be on file 10 days before (by Jun 3)","Contract"],["Assemble gift bags","",""],["Create seating chart","",""],["Venue final walk through","",""],["Collect RSVPs and call non responders","",""],["Choose menu selections","",""],["Practice vows out loud","",""],["Schedule beauty appointments","",""],["Pay vendors in full","",""]]},
+ {m:2, items:[["Wedding dress fitting","",""],["Qipao fitting","",""],["Day of details: menu design, escort display, signage","",""]]},
+ {m:1, items:[["Get the marriage license","No earlier than Apr 14: a NY license is valid 60 days, with a 24 hour wait before the ceremony",""],["Confirm rehearsal date and time with the venue","",""],["Send band/DJ contract to the venue","Needed for technical requirements","Contract"],["Get vendor regulations signed by every vendor","Must be on file 10 days before (by Jun 3)","Contract"],["Assemble gift bags","",""],["Create seating chart","",""],["Venue final walk through","",""],["Collect RSVPs and call non responders","",""],["Choose menu selections","",""],["Practice vows out loud","",""],["Schedule beauty appointments","",""],["Pay vendors in full","",""]]},
  {id:"w2", title:"2 Weeks Before", due:new Date(2027,4,30), items:[["Pay venue final balance","Due May 30, 2027 by cash, bank check or wire","Contract"],["Confirm final headcount and floorplan","Guarantee is 160; use any unused credit on vendor meals or enhancements",""],["Review music playlist","",""],["Final dress fitting","",""],["Prepare tip envelopes for vendors and venue staff","See Gratuities tab",""]]},
  {id:"wk", title:"Wedding Week", due:new Date(2027,5,8), items:[["Pick up and try on all rentals","Leave time for size swaps",""],["Deliver gift bags to the venue","No earlier than Jun 8 (5 days before)","Contract"],["Bring a locked box for card envelopes","Name a trusted family member to handle it","Contract"]]},
  {id:"d1", title:"Day Before", due:new Date(2027,5,12), items:[["Eat a healthy meal and drink water","",""],["Organize gown, qipao and accessories","",""],["Get a good night's sleep","",""]]},
@@ -513,7 +547,7 @@ function menuRender(){
       count(sid,n);
       let h=chooser(sid,"Stations",n,STATIONS.map(x=>x.name),`1 station per 40 guests, rounded up, max 5. ${num(B.guests)} expected guests \u00f7 40 = ${n} station${n===1?"":"s"}. Updates when you change the guest count on the Budget tab.`);
       picked.forEach(pn=>{const st=STATIONS.find(x=>x.name===pn); if(!st)return;
-        h+=`<div class="sub"><div class="mch"><h4><span>${st.name}</span></h4>${st.desc?`<div class="desc">${st.desc}</div>`:""}</div>`+
+        h+=`<div class="msub"><div class="mch"><h4><span>${st.name}</span></h4>${st.desc?`<div class="desc">${st.desc}</div>`:""}</div>`+
           st.subs.map(([l,m,o])=>{const id=mid(st.name+"_"+l);count(id,m);return chooser(id,l,m,o)}).join("")+`</div>`;});
       return h;
     }
@@ -570,15 +604,15 @@ function addonTotals(){
   return {pp,flat,sum:pp*g+flat};
 }
 function addonRender(){
-  document.getElementById("addonList").innerHTML=ADDONS.map(([c,items])=>`<div class="card"><h3>${c}</h3><div class="scroll"><table class="bt ao">
+  document.getElementById("addonList").innerHTML=ADDONS.map(([c,items])=>`<div class="card"><h3>${c}</h3><div class="scroll"><table class="bt ao stack">
    <colgroup><col style="width:6%"><col style="width:46%"><col style="width:14%"><col style="width:16%"><col style="width:18%"></colgroup>
    <tr><th></th><th>Item</th><th class="num">Menu price</th><th class="num">All in price</th><th class="num">Est. cost all in</th></tr>`+
    items.map(it=>{const id=aid(c,it[0]), mp=it[2]===null, flat=it[3]==="flat";
-     return `<tr><td>${mp?"":`<input type="checkbox" data-addon="${id}" ${B.addons&&B.addons[id]?"checked":""} style="width:auto">`}</td>
-     <td><span class="nm">${it[0]}</span>${it[1]?`<span class="ds">${it[1]}</span>`:""}</td>
-     <td class="num ds" style="display:table-cell">${mp?"Market price":$c(it[2])+(flat?" flat":" pp")}</td>
-     <td class="num"><b>${mp?"":$c(it[2]*AMULT())+(flat?" flat":" pp")}</b></td>
-     <td class="num" data-est="${id}">${mp?"Ask venue":""}</td></tr>`}).join("")+`</table></div></div>`).join("");
+     return `<tr><td class="cb">${mp?"":`<input type="checkbox" data-addon="${id}" ${B.addons&&B.addons[id]?"checked":""} style="width:auto">`}</td>
+     <td class="full itm"><span class="nm">${it[0]}</span>${it[1]?`<span class="ds">${it[1]}</span>`:""}</td>
+     <td class="num ds" data-label="Menu" style="display:table-cell">${mp?"Market price":$c(it[2])+(flat?" flat":" pp")}</td>
+     <td class="num" data-label="All in"><b>${mp?"":$c(it[2]*AMULT())+(flat?" flat":" pp")}</b></td>
+     <td class="num" data-label="Est. total" data-est="${id}">${mp?"Ask venue":""}</td></tr>`}).join("")+`</table></div></div>`).join("");
 }
 function addonCalc(V){
   const g=num(B.guests), A=addonTotals(), mult=(1+num(B.fee)/100)*(1+num(B.tax)/100);
@@ -643,12 +677,12 @@ const esc=s=>String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g
 
 function bRows(){
   document.getElementById("bRows").innerHTML=B.rows.map((r,i)=>`<tr>
-   <td><input data-r="${i}" data-k="item" value="${esc(r.item)}"></td>
-   <td class="num"><input data-r="${i}" data-k="est" inputmode="numeric" value="${r.est===""?"":num(r.est).toLocaleString()}"></td>
-   <td class="num"><input data-r="${i}" data-k="act" inputmode="numeric" value="${r.act===""?"":num(r.act).toLocaleString()}"></td>
-   <td class="num"><input data-r="${i}" data-k="paid" inputmode="numeric" value="${r.paid===""?"":num(r.paid).toLocaleString()}"></td>
-   <td><input data-r="${i}" data-k="note" value="${esc(r.note)}"></td>
-   <td><button class="x" data-del="${i}" title="Remove">&times;</button></td></tr>`).join("");
+   <td class="full"><input data-r="${i}" data-k="item" value="${esc(r.item)}"></td>
+   <td class="num" data-label="Estimate"><input data-r="${i}" data-k="est" inputmode="numeric" value="${r.est===""?"":num(r.est).toLocaleString()}"></td>
+   <td class="num" data-label="Actual"><input data-r="${i}" data-k="act" inputmode="numeric" value="${r.act===""?"":num(r.act).toLocaleString()}"></td>
+   <td class="num" data-label="Paid"><input data-r="${i}" data-k="paid" inputmode="numeric" value="${r.paid===""?"":num(r.paid).toLocaleString()}"></td>
+   <td class="full" data-label="Notes"><input data-r="${i}" data-k="note" value="${esc(r.note)}"></td>
+   <td class="xcell"><button class="x" data-del="${i}" title="Remove">&times;</button></td></tr>`).join("");
 }
 function venue(){
   const g=num(B.guests), min=num(B.min), pp=num(B.pp), cer=num(B.cer), up=num(B.up);
