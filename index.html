@@ -98,6 +98,13 @@ a{color:var(--accent)}
 .ao td:first-child{width:36px}
 .ao .nm{font-weight:500}
 .ao .ds{display:block;font-size:12.5px;color:var(--muted)}
+.fbm{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:4px 0 14px;background:var(--bg)}
+.fbm-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.fbm-top b{color:var(--ink);text-transform:none;letter-spacing:0;font-size:15px;font-variant-numeric:tabular-nums}
+.fbm-bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 6px}
+.fbm-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.fbm.met .fbm-bar i{background:var(--sage)}
+.fbm-sub{font-size:13px;color:var(--muted)}
 .x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
 .addrow{margin-top:10px;background:none;border:1px dashed var(--line);color:var(--accent);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -212,6 +219,11 @@ a{color:var(--accent)}
       <label>Contract guarantee<input id="vMin" inputmode="numeric"></label>
       <label>Price per person ($)<input id="vPP" inputmode="decimal"></label>
       <label>Other upcharges ($)<input id="vUp" inputmode="numeric" placeholder="0"></label>
+    </div>
+    <div class="fbm" id="fbm">
+      <div class="fbm-top"><span>Food &amp; beverage minimum</span><b id="fbmVal">$0 of $0</b></div>
+      <div class="fbm-bar"><i id="fbmBar"></i></div>
+      <div class="fbm-sub" id="fbmSub"></div>
     </div>
     <div class="scroll"><table class="bt">
       <colgroup><col style="width:70%"><col style="width:30%"></colgroup>
@@ -736,6 +748,13 @@ function bCalc(){
   set("tOverTxt",`With your add ons the bill is ${$f(V.sub)}, which makes each 5% line ${$f(c5)} and the total ${$f(700+c5*2)} to ${$f(1300+c5*2)}.`);
   document.getElementById("tBasis").innerHTML=`Based on the required Minimum Financial Requirement of <b>${$f(RMD)}</b> (${V.min} guaranteed guests &times; ${$c(V.pp)} + ${$f(V.cer)} ceremony fee), before the 22% facility fee and tax. This is the least the bill can be, so it's the floor for tips. The contract says the facility fee is <b>not</b> a gratuity, so staff tips are separate.`;
   addonCalc(V);
+  const fbMin=V.base, fbUsed=V.g*V.pp+V.A.sum, pctMin=fbMin?Math.min(100,fbUsed/fbMin*100):0, gap=fbMin-fbUsed;
+  document.getElementById("fbmVal").textContent=`${$f(fbUsed)} of ${$f(fbMin)}`;
+  document.getElementById("fbmBar").style.width=pctMin+"%";
+  document.getElementById("fbm").classList.toggle("met",gap<=0);
+  document.getElementById("fbmSub").innerHTML= gap>0
+    ? `${Math.round(pctMin)}% used: ${V.g} guests &times; ${$c(V.pp)}${V.A.sum?` + ${$f(V.A.sum)} food add ons`:""}. <b>${$f(gap)}</b> left before you pay more (about ${$f(gap*AMULT())} all in). You're billed the full minimum either way.`
+    : `Minimum met. You're ${$f(-gap)} over it, so each extra dollar of food now adds to the bill (about $1.33 with fee and tax).`;
 }
 document.getElementById("budget").addEventListener("input",e=>{
   const el=e.target, map={bTotal:"total",vGuests:"guests",vMin:"min",vPP:"pp",vUp:"up"};
