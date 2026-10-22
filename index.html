@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Wedding Timeline & Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ec; --card:#fffdf9; --ink:#2b2622; --muted:#7a6f66; --line:#e6ddd0;
+  --accent:#8a6a3b; --accent-soft:#efe4d1; --sage:#5f7a62; --sage-soft:#e3ebe2;
+  --rose:#a5524a; --rose-soft:#f5e1dd;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1917; --card:#24211e; --ink:#eee7dd; --muted:#a89d92; --line:#3a352f;
+    --accent:#d2b07a; --accent-soft:#3a3124; --sage:#9bbd9e; --sage-soft:#28332a;
+    --rose:#e08f85; --rose-soft:#3d2725;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:32px 16px 80px}
+header{text-align:center;padding:24px 0 8px}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600}
+h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(34px,6vw,52px);margin:6px 0 4px;line-height:1.1}
+.sub{color:var(--muted);margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0 8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.stat b{display:block;font-family:"Cormorant Garamond",serif;font-size:34px;font-weight:600;line-height:1}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:16px 0 4px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:28px 0 18px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:99px;font:inherit;font-size:13px;cursor:pointer}
+.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+section.panel{display:none}
+section.panel.on{display:block}
+.phase{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:0 0 14px;overflow:hidden}
+.phase-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.phase-h h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:24px;margin:0}
+.phase-h .when{color:var(--muted);font-size:13px}
+.tag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.tag.now{background:var(--rose-soft);color:var(--rose)}
+.tag.next{background:var(--accent-soft);color:var(--accent)}
+.tag.later{background:var(--line);color:var(--muted)}
+.tag.done{background:var(--sage-soft);color:var(--sage)}
+ul.check{list-style:none;margin:0;padding:6px 0}
+ul.check li{display:flex;gap:12px;align-items:flex-start;padding:9px 18px}
+ul.check li:hover{background:var(--bg)}
+ul.check input{appearance:none;flex:none;width:19px;height:19px;border:1.5px solid var(--muted);border-radius:5px;margin-top:2px;cursor:pointer;display:grid;place-content:center}
+ul.check input:checked{background:var(--sage);border-color:var(--sage)}
+ul.check input:checked::after{content:"";width:5px;height:9px;border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+ul.check label{cursor:pointer;flex:1}
+ul.check li.is-done label{color:var(--muted);text-decoration:line-through}
+.note{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+li.is-done .note{text-decoration:none}
+.src{font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;margin-left:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 14px}
+.card h3{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;margin:0 0 8px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+a{color:var(--accent)}
+.toolbar{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.toolbar button{background:none;border:none;color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline}
+.cur h4{margin:12px 0 2px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.cur p{margin:0 0 4px;font-size:14px}
+.scroll{overflow-x:auto;margin:0 -6px}
+.bt{min-width:560px}
+.bt input{width:100%;font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 6px}
+.bt input:hover,.bt input:focus{border-color:var(--line);background:var(--bg);outline:none}
+.bt td.num input,.bt td.num{text-align:right;font-variant-numeric:tabular-nums}
+.bt td{padding:4px 4px}
+.bt th.num{text-align:right}
+.bt{table-layout:fixed}
+.bt tr.auto td{color:var(--muted);font-style:italic}
+.bt tfoot td{font-weight:600;border-top:2px solid var(--ink);border-bottom:none;padding-top:10px}
+.mgrp{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:0 0 14px;overflow:hidden}
+.mgrp>h3{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;margin:0;padding:16px 18px;border-bottom:1px solid var(--line)}
+.mch{padding:12px 18px;border-bottom:1px solid var(--line)}
+.mch:last-child{border-bottom:none}
+.mch h4{margin:0 0 8px;font-size:14px;font-weight:600;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.mch h4 .cnt{font-size:12px;font-weight:500;color:var(--muted)}
+.mch h4 .cnt.ok{color:var(--sage)}
+.mch .desc{font-size:12.5px;color:var(--muted);margin:-4px 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:13px;cursor:pointer;background:var(--bg)}
+.opts label.sel{background:var(--sage-soft);border-color:var(--sage);color:var(--ink)}
+.opts label.dis{opacity:.45;cursor:not-allowed}
+.opts input{display:none}
+.sub{margin:10px 18px 0 32px;padding-left:12px;border-left:2px solid var(--accent-soft)}
+.sub .mch{padding:8px 0;border:none}
+.ao td:first-child{width:36px}
+.ao .nm{font-weight:500}
+.ao .ds{display:block;font-size:12.5px;color:var(--muted)}
+.x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
+.addrow{margin-top:10px;background:none;border:1px dashed var(--line);color:var(--accent);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi span{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.kpi b{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:600;font-variant-numeric:lining-nums}
+.kpi input{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:600;width:100%;border:none;background:transparent;color:var(--ink);padding:0}
+.kpi b.neg{color:var(--rose)} .kpi b.pos{color:var(--sage)}
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 12px}
+.vgrid label{font-size:12px;color:var(--muted)}
+.vgrid input{display:block;width:100%;margin-top:3px;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.incl{list-style:none;padding:0;margin:8px 0 0;columns:2;column-gap:24px}
+.incl li{padding:4px 0 4px 22px;position:relative;font-size:14px;break-inside:avoid}
+.incl.notincl li::before{content:"\00d7";color:var(--rose)}
+.incl li::before{content:"\2713";position:absolute;left:2px;color:var(--sage);font-weight:700}
+.hint{background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:12px}
+@media (max-width:640px){
+  .kpis,.vgrid{grid-template-columns:1fr 1fr}
+  .incl{columns:1}
+  .stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .stat b{font-size:26px}
+  .grid2{grid-template-columns:1fr}
+  ul.check li{padding:9px 14px}
+}
+@media print{
+  .tabs,.toolbar{display:none}
+  section.panel{display:block!important}
+  .phase,.card{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Our Wedding</div>
+  <h1>Sunday, June 13, 2027</h1>
+  <p class="sub">Timeline, checklist &amp; budget</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b id="days">0</b><span>Days to go</span></div>
+  <div class="stat"><b id="doneCt">0</b><span>Completed</span></div>
+  <div class="stat"><b id="leftCt">0</b><span>Remaining</span></div>
+</div>
+<div class="bar"><i id="prog"></i></div>
+
+<nav class="tabs" id="tabs">
+  <button data-t="timeline" class="on">Timeline</button>
+  <button data-t="budget">Budget</button>
+  <button data-t="addons">Food &amp; Menu</button>
+  <button data-t="forms">Venue Forms</button>
+  <button data-t="contacts">Contacts</button>
+  <button data-t="tips">Gratuities</button>
+</nav>
+
+<section class="panel on" id="timeline"></section>
+
+<section class="panel" id="budget">
+  <div class="kpis">
+    <div class="kpi"><span>Total budget ($)</span><input id="bTotal" inputmode="numeric"></div>
+    <div class="kpi"><span>Estimated all in</span><b id="bEst">$0</b><small class="note" id="bEstBrk" style="display:block"></small></div>
+    <div class="kpi"><span>Paid so far</span><b id="bPaid">$0</b></div>
+    <div class="kpi"><span>Left vs estimate</span><b id="bLeft">$0</b></div>
+  </div>
+
+  <div class="card">
+    <h3>Venue Contract</h3>
+    <p class="note">From the venue contract. Wedding Package at $195 per person less a 5% discount = $185.25.</p>
+    <div class="hint" style="margin:10px 0 14px">
+      <b>Minimum required spend (cannot be reduced)</b><br>
+      Food &amp; beverage minimum: <b>$29,640.00</b> (160 guaranteed guests &times; $185.25)<br>
+      Plus ceremony fee $2,000.00 = Minimum Financial Requirement <b>$31,640.00</b><br>
+      Plus 22% facility fee ($6,960.80) and 8.625% sales tax ($3,329.32) = <b>$41,930.12 floor</b>, owed even if fewer guests attend.<br>
+      <span class="note">Not in the floor: staff gratuities (optional), the 3% card fee on card payments after the first, and anything you add (food add ons beyond your credit, extra guests above 160).</span>
+    </div>
+    <div class="vgrid">
+      <label>Expected guests<input id="vGuests" inputmode="numeric"></label>
+      <label>Contract guarantee<input id="vMin" inputmode="numeric"></label>
+      <label>Price per person ($)<input id="vPP" inputmode="decimal"></label>
+      <label>Other upcharges ($)<input id="vUp" inputmode="numeric" placeholder="0"></label>
+    </div>
+    <div class="scroll"><table class="bt">
+      <colgroup><col style="width:70%"><col style="width:30%"></colgroup>
+      <tr><th>Venue line</th><th class="num">Amount</th></tr>
+      <tr><td id="vFBlbl">Wedding Package</td><td class="num" id="vFB">$0</td></tr>
+      <tr><td id="vAOlbl">Food add ons (from the Food Add Ons tab)</td><td class="num" id="vAO">$0.00</td></tr>
+      <tr class="auto"><td>Less: guarantee credit applied to add ons</td><td class="num" id="vAOcred">$0.00</td></tr>
+      <tr><td>Ceremony fee</td><td class="num" id="vCer">$0</td></tr>
+      <tr><td>Other upcharges (extra bartender, etc.)</td><td class="num" id="vUpAmt">$0</td></tr>
+      <tr><td><b>Subtotal</b> (minimum is $31,640)</td><td class="num" id="vSub">$0</td></tr>
+      <tr class="auto"><td>Facility fee 22% (taxable; not a gratuity)</td><td class="num" id="vFee">$0</td></tr>
+      <tr class="auto"><td>NY sales tax 8.625% (on subtotal + facility fee)</td><td class="num" id="vTaxAmt">$0</td></tr>
+      <tr><td><b>Contract grand total</b></td><td class="num"><b id="vGrand">$0</b></td></tr>
+      <tr class="auto"><td>Gratuities on the day (see Gratuities tab, midpoint)</td><td class="num" id="vTip">$0</td></tr>
+      <tfoot><tr><td>Venue all in</td><td class="num" id="vTotal">$0</td></tr></tfoot>
+    </table></div>
+    <div class="hint" id="ppHint"></div>
+  </div>
+
+
+  <div class="card">
+    <h3>Included in the Wedding Package</h3>
+    <ul class="incl">
+      <li>Wedding planning services, day of coordinator &amp; personal bridal attendant</li>
+      <li>Bridal &amp; groom suites from 7:00 AM with continental platters, Prosecco, drinks</li>
+      <li>Complimentary honeymoon suite the night of the wedding</li>
+      <li>30 min early hospitality: champagne &amp; infused water</li>
+      <li>1 hour cocktail reception: 8 passed hors d'oeuvres plus stations (1 per 40 guests, max 5)</li>
+      <li>Plated dinner with personalized menus</li>
+      <li>5 hour premium open bar (1 bartender per 60 guests) &amp; champagne toast</li>
+      <li>Wedding cake with cutting &amp; serving</li>
+      <li>Round tables, standard banquet chairs, floor length linens, linen napkins</li>
+      <li>Dance floor; cocktail, gift, cake, favor &amp; place card tables</li>
+      <li>Coat check, lobby hostess, 2 valet attendants</li>
+      <li>Directional maps, set up, breakdown &amp; clean up</li>
+    </ul>
+    <h3 style="margin-top:16px">Not Included at the Venue</h3>
+    <ul class="incl notincl">
+      <li>All decorations: centerpieces, arches, chair covers, specialty chairs (venue approval needed)</li>
+      <li>After party (<b>not planned</b>): $2,500++ up to 50 guests, $3,000++ up to 100 (1.5 hrs; +$1,000 per extra hour)</li>
+      <li>Vendor meals: 50% of adult rate (~$92.63 each); kids are also 50%</li>
+      <li>Additional bartender or bar station: $300++</li>
+      <li>Hors d'oeuvre, station &amp; dessert enhancements (priced per person)</li>
+      <li>Band green room or food, dedicated power circuit if needed</li>
+    </ul>
+    <p class="note" style="margin-top:8px">Not using: outdoor tent, outdoor pool, guest hotel rooms. After party not planned.</p>
+  </div>
+
+  <div class="card">
+    <h3>Not Included: Outside Vendors &amp; Extras</h3>
+    <p class="note">Starting estimates for a NY metro mid range wedding. Type over any number; changes save automatically.</p>
+    <div class="scroll"><table class="bt">
+      <colgroup><col style="width:30%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:27%"><col style="width:4%"></colgroup>
+      <thead><tr><th>Item</th><th class="num">Estimate</th><th class="num">Actual</th><th class="num">Paid</th><th>Notes</th><th></th></tr></thead>
+      <tbody id="bRows"></tbody>
+      <tfoot><tr><td>Outside vendors total</td><td class="num" id="oEst">$0</td><td class="num" id="oAct">$0</td><td class="num" id="oPaid">$0</td><td></td><td></td></tr></tfoot>
+    </table></div>
+    <button class="addrow" id="addRow">+ Add line</button>
+  </div>
+
+  <div class="card">
+    <h3>Key Contract Terms</h3>
+    <table>
+      <tr><td>Minimum spend</td><td>F&amp;B minimum $29,640 (160 &times; $185.25); Minimum Financial Requirement $31,640 with ceremony fee; $41,930.12 with facility fee and tax</td></tr>
+      <tr><td>Guest guarantee</td><td>Billed for at least 160 guests; the guarantee cannot be reduced. Unused credit can go toward the after party (not planned), vendor meals and F&amp;B enhancements</td></tr>
+      <tr><td>Event hours</td><td>Venue 7:00 AM to 11:59 PM; 30 min early hospitality, 1 hr cocktails, 4 hr reception; optional 1.5 hr after party (not planned)</td></tr>
+      <tr><td>Sound ordinance</td><td>The city's Sunday limit is 8:00 PM; confirmed it does not affect the reception</td></tr>
+      <tr><td>Vendor access</td><td>From 12:00 PM (earlier on request). Signed vendor regulations on file 10 days before</td></tr>
+      <tr><td>Gift bags &amp; envelopes</td><td>Deliver bags no more than 5 days before. Bring a locked box for card envelopes and name a trusted person</td></tr>
+      <tr><td>Cancellation</td><td>25% of minimum until 120 days out; 50% at 119 to 90 days; 75% at 89 to 60; 100% inside 59 days</td></tr>
+      <tr><td>Hard stop</td><td>Extensions need approval; nothing past 2:00 AM</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="addons">
+  <nav class="tabs" style="margin-top:0" id="foodSub">
+    <button data-f="menu" class="on">Menu Selections</button>
+    <button data-f="extras">Paid Add Ons</button>
+  </nav>
+  <div id="f_menu">
+    <div class="card">
+      <h3>Menu Selections <span class="tag next" id="mProg">0 of 0 done</span></h3>
+      <p class="note" style="margin:0">Choices included in your Wedding Package that you need to give the venue. Tick your picks; each list stops at its limit. Guests usually pick one entree (beef, poultry or fish) on the RSVP. Lock these in after your tasting (4 months out).</p>
+    </div>
+    <div id="menuList"></div>
+  </div>
+  <div id="f_extras" style="display:none">
+  <div class="kpis">
+    <div class="kpi"><span>Selected per guest, all in</span><b id="aPP">$0</b></div>
+    <div class="kpi"><span>Selected total, all in</span><b id="aSum">$0</b></div>
+    <div class="kpi"><span>Covered by credit</span><b id="aCred" class="pos">$0</b></div>
+    <div class="kpi"><span>New cost all in</span><b id="aNew">$0</b></div>
+  </div>
+  <div class="card">
+    <p class="note" style="margin:0">Enhancements from the contract menu. Per guest items are estimated on your <b id="aG">130</b> expected guests (confirm with the venue whether they price on expected guests or the 160 guarantee). All food and beverage carries the 22% facility fee plus 8.625% tax. <b>All in</b> prices include the 22% facility fee and 8.625% tax (menu price &times; 1.3252). Tick items to add them to the Budget tab. Because you expect fewer guests than the guarantee, your unused credit covers enhancements first, so the first <b id="aCredTot">$0</b> of menu price (about <b id="aCredAll">$0</b> all in) costs nothing extra.</p>
+  </div>
+  <div id="addonList"></div>
+  <div class="card">
+    <h3>Already Included in Your Package</h3>
+    <p class="note">No add on needed for these. Cocktail hour includes 8 passed hors d'oeuvres plus 1 station per 40 guests (max 5), chosen from:</p>
+    <ul class="incl">
+      <li>Peking Style Duck Station (bao pancakes, hoisin, fried rice or bok choy)</li>
+      <li>Dim Sum Station (select two)</li>
+      <li>Pasta, Italian, Carving &amp; Crepe stations</li>
+      <li>Tuscan or Mediterranean Antipasto</li>
+      <li>Taco, Latin American, Hawaiian, Caribbean, Middle Eastern, Creole stations</li>
+      <li>Paella, Mac &amp; Cheese, Mashed Potato, Polenta, Flatbread, Fun (sliders) stations</li>
+      <li>Plated dinner: filet mignon or NY shell steak, rack of lamb, chicken, duck, salmon, branzino, mahi</li>
+      <li>Wedding cake with two accompaniments</li>
+    </ul>
+  </div>
+  </div>
+</section>
+
+<section class="panel" id="forms">
+  <div class="phase">
+    <div class="phase-h"><h2>Welcome Packet Forms</h2><span class="when">Complete with the venue coordinator &amp; the venue coordination team</span></div>
+    <ul class="check" data-group="forms"></ul>
+  </div>
+</section>
+
+<section class="panel" id="contacts">
+  <div class="grid2">
+    <div class="card">
+      <h3>Our Vendors</h3>
+      <table id="vendors">
+        <tr><th>Role</th><th>Vendor</th></tr>
+        <tr><td>Venue</td><td>Booked &#10003;</td></tr>
+        <tr><td>Day of coordinator</td><td>Included with venue</td></tr>
+        <tr><td>Photo / Video</td><td>&nbsp;</td></tr>
+        <tr><td>Florist / Decor</td><td>&nbsp;</td></tr>
+        <tr><td>Band / DJ / MC</td><td>&nbsp;</td></tr>
+        <tr><td>Officiant</td><td>&nbsp;</td></tr>
+        <tr><td>Hair &amp; Makeup</td><td>&nbsp;</td></tr>
+        <tr><td>Transportation</td><td>&nbsp;</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="tips">
+  <div class="card">
+    <h3>Suggested Gratuities</h3>
+    <p class="note" style="margin-bottom:10px">The venue charges no service fee or gratuity; tips are handed out on the day. Ranges are the venue's published averages.</p>
+    <div class="hint" id="tBasis" style="margin:0 0 12px"></div>
+    <div class="scroll"><table class="bt">
+      <colgroup><col style="width:34%"><col style="width:26%"><col style="width:20%"><col style="width:20%"></colgroup>
+      <tr><th>Role</th><th>Suggested</th><th class="num">Low</th><th class="num">High</th></tr>
+      <tr><td>Bridal Attendant</td><td>$200 to $300</td><td class="num">$200</td><td class="num">$300</td></tr>
+      <tr><td>Venue Event Coordinator</td><td>$250 to $500</td><td class="num">$250</td><td class="num">$500</td></tr>
+      <tr><td>Sales Manager</td><td>$250 to $500</td><td class="num">$250</td><td class="num">$500</td></tr>
+      <tr><td>Maitre D' &amp; Food and Beverage Team</td><td>5% of total bill <span class="note" id="tBill1"></span></td><td class="num" id="tFB">$0</td><td class="num" id="tFB2">$0</td></tr>
+      <tr><td>Chef &amp; Kitchen Staff</td><td>5% of total bill <span class="note" id="tBill2"></span></td><td class="num" id="tCK">$0</td><td class="num" id="tCK2">$0</td></tr>
+      <tfoot><tr><td>Total gratuities</td><td></td><td class="num" id="tLow">$0</td><td class="num" id="tHigh">$0</td></tr></tfoot>
+    </table></div>
+    <div class="hint" id="tOver" style="display:none;margin-top:12px"><span id="tOverTxt"></span></div>
+    <p class="note" style="margin-top:10px">Prepare labeled envelopes two weeks out. The Budget tab carries the midpoint of this range.</p>
+  </div>
+</section>
+
+
+
+<div class="toolbar"><button id="print">Print</button><button id="reset">Reset checklist</button></div>
+</div>
+
+<script>
+const WED = new Date(2027,5,13);
+// phases: [title, monthsBefore or date label, items]
+const phases = [
+ {id:"now", title:"Right Now", when:"This week", due:new Date(2026,9,27), items:[
+  ["Schedule intro call with the venue coordinator","Venue is available Wed to Fri, mornings or afternoons","Email"],
+  ["Pay venue deposit 1: $10,482.50","Paid at signing, Oct 2026","Contract"],
+  ["Set the wedding budget","Venue numbers are filled in; adjust outside vendor estimates in the Budget tab",""],
+  ["Accept venue planning platform invite","All venue planning info will live there","Email"],
+  ["Always cc the sales manager on wedding emails","","Email"],
+  ["Create folders for vendor contracts and vendor info","Saving them in the Wedding Planning folder","Packet"]
+ ]},
+ {id:"catch", title:"Catch Up", when:"12 to 8 month items &middot; by end of Nov 2026", due:new Date(2026,10,30), items:[
+  ["Make the wedding guest list","A/B/C tiers, ~120 to 130 expected",""],
+  ["Create an inspiration mood board","",""],
+  ["Decide if you still want an outside coordinator","Contract includes planning services and a day of coordinator",""],
+  ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this",""],
+  ["Hire florist and/or event decorator","",""],
+  ["Get the wedding dress","Done",""],
+  ["Choose the bridal party","",""],
+  ["Finalize guest invitation list","",""],
+  ["Take engagement photos","",""],
+  ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
+  ["Send out save the date cards","",""],
+  ["Start a song list for ceremony and reception","",""],
+  ["Consider honeymoon options","",""]
+ ]},
+ {m:7, items:[["Book rehearsal dinner venue","Can be held at the venue",""],["Decide on a qipao for the dinner change","Custom or tailored qipaos can take 6 to 10 weeks",""],["Order decorations, linens, chargers, dance floor","",""],["Hire officiant","",""]]},
+ {m:6, items:[["Pay venue deposit 2: $10,482.50","Due Jan 13, 2027. 3% card fee applies","Contract"],["Book transportation for you and guests","",""],["Meet invitation designers and finalize","Bilingual invitations",""],["Pick the rental styles for groomsmen and bridesmaids","Groomsmen in black tuxedos; bridesmaids in floor length dresses to match black tie",""]]},
+ {m:5, items:[["Book honeymoon","",""],["Reserve groom's white tuxedo and groomsmen's black tuxedos","Ivory/white dinner jacket with black tux trousers for the groom; ivory photographs warmer than stark white. Rental shops book up for June weekends",""],["Choose groom's bow tie and boutonniere to set him apart","e.g. a different bow tie color or texture, or one that ties to the qipao",""],["Reserve bridesmaid dress rentals","Floor length to match the groomsmen's black tuxedos",""],["Shop attire for flower girl and ring bearer","",""]]},
+ {m:4, items:[["Hair and makeup trial","",""],["Buy wedding bands","",""],["Purchase ceremonial items and flat lays","",""],["Schedule tasting at the venue","",""]]},
+ {m:3, items:[["Collect attendants' measurements for rentals","Most rental shops want sizes 6 to 8 weeks out",""],["Pay venue deposit 3: $10,482.50","Due Mar 13, 2027","Contract"],["Set dates for bridal shower and bachelor/bachelorette","",""],["Order wedding favors","",""],["Write vows and select readings","",""],["Send out invitations","",""],["Schedule centerpiece sample","",""]]},
+ {m:2, items:[["Wedding dress fitting","",""],["Qipao fitting","",""],["Pick up marriage license","NY license valid 60 days; 24 hour wait before ceremony",""],["Day of details: menu design, escort display, signage","",""]]},
+ {m:1, items:[["Send band/DJ contract to the venue","Needed for technical requirements","Contract"],["Get vendor regulations signed by every vendor","Must be on file 10 days before (by Jun 3)","Contract"],["Assemble gift bags","",""],["Create seating chart","",""],["Venue final walk through","",""],["Collect RSVPs and call non responders","",""],["Choose menu selections","",""],["Practice vows out loud","",""],["Schedule beauty appointments","",""],["Pay vendors in full","",""]]},
+ {id:"w2", title:"2 Weeks Before", due:new Date(2027,4,30), items:[["Pay venue final balance","Due May 30, 2027 by cash, bank check or wire","Contract"],["Confirm final headcount and floorplan","Guarantee is 160; use any unused credit on vendor meals or enhancements",""],["Review music playlist","",""],["Final dress fitting","",""],["Prepare tip envelopes for vendors and venue staff","See Gratuities tab",""]]},
+ {id:"wk", title:"Wedding Week", due:new Date(2027,5,8), items:[["Pick up and try on all rentals","Leave time for size swaps",""],["Deliver gift bags to the venue","No earlier than Jun 8 (5 days before)","Contract"],["Bring a locked box for card envelopes","Name a trusted family member to handle it","Contract"]]},
+ {id:"d1", title:"Day Before", due:new Date(2027,5,12), items:[["Eat a healthy meal and drink water","",""],["Organize gown, qipao and accessories","",""],["Get a good night's sleep","",""]]},
+ {id:"after", title:"After the Wedding", due:new Date(2027,5,16), items:[["Return all tux, suit and dress rentals","Assign one person to collect and return them; late fees add up",""]]}
+];
+const forms = [
+ "Vendor Contact Collection Form","Wedding Drop Off Collection Form",
+ "Event Timeline (dry rehearsal, rehearsal dinner, ceremony, cocktail hour, reception, brunch)",
+ "Guest counts, bridal and groom suites, first look and family photo times",
+ "Ceremony details (garden location, backup space, officiant, music, aisle runner, chairs)",
+ "Processional order (full names)","Recessional order (full names)",
+ "Cocktail hour location, dietary restrictions, signature cocktails",
+ "Grand entrance order (full names)",
+ "Reception order of events (include 敬酒 table round and qipao change)",
+ "Cake order form (flavor, filling, frosting)","After party form (not planned; mark No)",
+ "Morning after brunch"
+];
+const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fmt=d=>months[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear();
+let state={};
+try{state=JSON.parse(localStorage.getItem("wp-2027")||"{}")}catch(e){}
+if(!state._dress){state._dress=true;state["t_get_the_wedding_dress"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+if(!state._fold){state._fold=true;state["t_create_folders_for_vendor_contracts_and_vendor_info"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+if(!state._dep1){state._dep1=true;state["t_pay_venue_deposit_1_10_482_50"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+const save=()=>{try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}};
+const today=new Date(); today.setHours(0,0,0,0);
+
+function li(key,text,note,src){
+  const d=!!state[key];
+  return `<li class="${d?"is-done":""}"><input type="checkbox" id="${key}" ${d?"checked":""}><label for="${key}">${text}${src?`<span class="src">${src}</span>`:""}${note?`<span class="note">${note}</span>`:""}</label></li>`;
+}
+function render(){
+  let h="";
+  phases.forEach((p,i)=>{
+    let title=p.title, when=p.when, due=p.due;
+    if(p.m){ due=new Date(2027,5-p.m,13); title=p.m+(p.m>1?" Months":" Month")+" Before"; when="By "+fmt(due); }
+    else if(!when) when=fmt(due);
+    const keys=p.items.map(it=>"t_"+it[0].toLowerCase().replace(/[^a-z0-9]+/g,"_"));
+    const all=keys.every(k=>state[k]);
+    const days=(due-today)/864e5;
+    const tag= all?'<span class="tag done">Done</span>': days<=14?'<span class="tag now">Now</span>': days<=75?'<span class="tag next">Up next</span>':'<span class="tag later">Later</span>';
+    h+=`<div class="phase"><div class="phase-h"><h2>${title}${tag}</h2><span class="when">${when}</span></div><ul class="check">`+
+       p.items.map((it,j)=>li(keys[j],it[0],it[1],it[2])).join("")+`</ul></div>`;
+  });
+  document.getElementById("timeline").innerHTML=h;
+  document.querySelector('[data-group="forms"]').innerHTML=forms.map((f,j)=>li("f_"+f.toLowerCase().replace(/[^a-z0-9]+/g,"_").slice(0,40),f,"","")).join("");
+  stats();
+}
+function stats(){
+  const boxes=[...document.querySelectorAll("ul.check input")];
+  const done=boxes.filter(b=>b.checked).length;
+  document.getElementById("doneCt").textContent=done;
+  document.getElementById("leftCt").textContent=boxes.length-done;
+  document.getElementById("prog").style.width=(100*done/boxes.length)+"%";
+  document.getElementById("days").textContent=Math.max(0,Math.ceil((WED-today)/864e5));
+}
+document.addEventListener("change",e=>{
+  if(e.target.matches("ul.check input")){state[e.target.id]=e.target.checked;save();render();}
+});
+document.getElementById("tabs").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll("section.panel").forEach(s=>s.classList.toggle("on",s.id===b.dataset.t));
+});
+document.getElementById("print").onclick=()=>window.print();
+document.getElementById("reset").onclick=()=>{state={};save();render();};
+render();
+
+// ---------- Menu selections ----------
+const ST=(name,desc,subs)=>({name,desc,subs:subs||[]});
+const STATIONS=[
+ ST("Tuscan Italian Antipasto","Prosciutto, salami, sopressata, provolone, mozzarella, melon, peppers, artichokes, olives, breads"),
+ ST("Pasta Station","",[["Sauces",3,["Filetto di Pomodoro","Marinara","Bolognese","Puttanesca","Fra Diavolo","Alfredo (in Parmesan wheel)","Goat Cheese Cream","Cacio e Pepe","A la Vodka","Primavera","Garlic and Oil","Pesto","Clam Sauce"]],["Pastas",2,["Penne","Rigatoni","Cheese Tortellini","Penne (GF)"]]]),
+ ST("Italian Station","",[["Dishes",2,["Crispy Fried Calamari","Mussels in White Wine & Marinara","Shrimp Oreganata","Sweet & Hot Sausage with Broccoli Rabe","Eggplant Rollatini Florentine","Lasagna Bianca","Lasagna Bolognese"]]]),
+ ST("Crepe Station","Made to order French crepes",[["Fillings",2,["Chicken with Peppercorn Sauce","Spinach & Mushrooms","Cajun","Chicken Florentine","Seafood"]]]),
+ ST("Carving Station","",[["Carvings",2,["Marinated Steak, Vidalia Onion Au Jus","NY Shell Steak, Horseradish Aioli","Roasted Turkey, Cranberry Glaze","Honey Glazed Corned Beef","Pork Loin with Fig Sauce","Smoked Ham, Pineapple Champagne Glaze","Fresh White Ham with Apple Sauce","Leg of Lamb, Roasted Garlic Au Jus"]]]),
+ ST("Peking Style Duck Station","Duck in moo shu pancakes with cucumber, scallion & hoisin",[["Side",1,["Vegetable Fried Rice","Baby Bok Choy"]]]),
+ ST("Dim Sum Station","With dipping sauce, scallion dip & soy sesame sauce",[["Dim sum",2,["Vegetable","Shrimp","Pork","Chicken"]]]),
+ ST("Mediterranean Antipasto","Dolmas, babaganoush, hummus, olives, feta, artichokes, pita & tzatziki"),
+ ST("Hawaiian Party","",[["Dishes",2,["Crispy Red Snapper & Mango Papaya Salsa","Macadamia Chicken Skewers","Teriyaki Shrimp","Huli Huli Grilled Chicken","Beef Pineapple Kabobs with Sweet Potato Fries"]]]),
+ ST("Taco Station","Corn, flour & hard shells with all the toppings",[["Fillings",2,["Chicken","Beef","Lamb","Mahi"]]]),
+ ST("Latin American Station","",[["Dish",1,["Halibut al Ajillo (seasonal)","Asado","Arroz con Pollo","Suckling Pig"]]]),
+ ST("Creole Mardi Gras Station","",[["Dish",1,["Pork Wellington","Chicken & Seafood Gumbo","Jambalaya","Crawfish Etouffee"]]]),
+ ST("Middle Eastern Station","Shish kabob chicken, moussaka, vegetable couscous"),
+ ST("San Gennaro","On Italian rolls with peppers & onions",[["Fillings",2,["Hot & Sweet Sausage","Chicken","Beef","Pork Braciole","Meatballs"]]]),
+ ST("Mashed Potato Bar","Garlic, sweet & wasabi mashed potatoes with toppings"),
+ ST("Mac and Cheese Station","",[["Styles",2,["Traditional","Shredded Short Ribs","Seafood with Lobster Sauce","Truffle Oil","Mini Meatballs"]]]),
+ ST("Classic Italian Chicken Station","Served with risotto Milanese",[["Styles",2,["Scarpariello","Francaise","Marsala","Cacciatore"]]]),
+ ST("Spanish Paella (GF)","Classic bomba rice",[["Accompaniments",2,["Chicken","Seafood","Chorizo","Vegetable","Mushroom"]]]),
+ ST("Polenta Bar (GF)","Soft & crispy polenta with toppings",[["Accompaniments",2,["Shredded Short Rib","Baby Garlic Shrimp","Spicy Italian Sausage & Peppers","Grilled Vegetables","Crispy Fried Chicken"]]]),
+ ST("Caribbean Grill","Kabobs with summer salsa, plantain or coconut rice",[["Dishes",2,["Jerk Chicken","Jerk Pork","Curry Lamb","Grilled Swordfish","Grilled Vegetables","Spicy Shrimp with Pineapple"]]]),
+ ST("Fun Station","Served with French fries",[["Items",2,["Pulled Pork Slider","Chicken Slider","Eggplant Slider","Kobe Slider","Buffalo Wings"]]]),
+ ST("Flatbread Station","",[["Flatbreads",2,["Margarita","Sweet Sausage","Prosciutto with Artichoke"]]])
+];
+const MENU=[
+ ["Cocktail Hour",[
+  ["Passed hors d'oeuvres",8,["Baby Mozzarella & Cherry Tomato","Watermelon & Feta","Goat Cheese & Beets","Brie & Pear Beggars Purse","Crispy Risotto","Vegetable Bruschetta","Fresh Fruit Skewers","Grilled Vegetable Skewers","Spanakopita","Stuffed Mushrooms","Wild Mushroom Pierogi","Stuffed Artichoke with Salsa","Scallop Ceviche in Potato Chips","Scallop Prosciutto, Lemon Beurre Blanc","Mini Crab Cakes","Smoked Salmon, Asparagus & Cream Cheese","Petite Beef Wellington","Beef Satay, Peanut Sauce","Franks in Blankets","Jerk Chicken Kabob","Sesame Chicken Skewers","Cajun Chicken","Prosciutto Melon","Asparagus, Walnuts & Prosciutto"]],
+  ["STATIONS"]]],
+ ["Plated Dinner: First Course",[
+  ["Salad",1,["The Classic Italian","Burgundy & Raspberry Pear","California Salad","Watermelon Salad","Caesar (in Parmesan frico bowl)","the venue Salad"]],
+  ["Salad accompaniment",1,["Prosciutto Bouquet","Goat Cheese Beggars Purse","Brie Cheese Beggars Purse","Shaved Provolone","Crumbled Blue Cheese","Shaved Parmesan","Crumbled Gorgonzola"]]]],
+ ["Plated Dinner: Main Course",[
+  ["Beef or lamb entree",1,["Grilled Filet Mignon","Grilled NY Shell Steak","Australian Rack of Lamb"]],
+  ["Beef sauce",1,["Bordelaise","Merlot Roasted Shallots","Bourbon Mushroom","Béarnaise"]],
+  ["Poultry entree",1,["Tuscan Chicken","Roasted Chicken, Apple Brandy Sauce","Madeira Chicken","Roasted Cornish Hen","Roasted Tomato Cornish Hen","Long Island Duck, Port Cherry Sauce"]],
+  ["Fish entree",1,["Macadamia Onion Encrusted Salmon","Pan Seared Sterling Salmon","Grilled Atlantic Salmon","Crispy Red Snapper (seasonal)","Grilled Branzino","Mahi Mahi"]],
+  ["Fish sauce",1,["Citrus Glaze with Pineapple","Leek Cream White Wine (winter only)","Horseradish Aioli","Mango Papaya Salsa","Port Glaze"]],
+  ["Vegetarian entree (optional)",1,["Wild Mushroom Risotto","Penne Primavera","Couscous with Grilled Vegetables"],true]]],
+ ["Wedding Cake",[
+  ["Cake",1,["Chocolate","Yellow","Vanilla","Red Velvet","Carrot","Funfetti"]],
+  ["Filling",1,["Cannoli","Dulce De Leche","Cream Cheese","Chocolate Truffle with Raspberry","Lemon Cream with Raspberry","Strawberry Short Cake","Coffee Cream with Hazelnut"]],
+  ["Outer cream",1,["Whipped Cream","Butter Cream"]],
+  ["Accompaniments",2,["Chocolate Covered Strawberries","Chocolate Truffle","Apple Beggar's Purse","Cannoli"]]]],
+ ["After Party (not planned)",[
+  ["Late night delights, only if you add an after party",3,["Mini Beef Sliders","Chicken Sliders","Pulled Pork Sliders","Chicken Nuggets","Truffle Fries","French Fries","Yuca Fries","Pizza Bagels","Fried Mozzarella","Chicken Wings","Tropical Fruit Skewers","Fried Bananas","Fried Plantains","Hot Pretzels","Hot Dogs","Corn Dogs"],true]]]
+];
+const mid=t=>"m_"+t.toLowerCase().replace(/[^a-z0-9]+/g,"_");
+const nStations=()=>Math.max(1,Math.min(5,Math.ceil(num(B.guests)/40)));
+function chooser(id,label,max,opts,desc,optional){
+  const sel=(B.menu&&B.menu[id])||[], full=sel.length>=max;
+  return `<div class="mch" data-ch="${id}" data-max="${max}"><h4><span>${label}${optional?' <span class="note" style="display:inline">optional</span>':""}</span><span class="cnt ${full?"ok":""}">${sel.length} of ${max} chosen</span></h4>${desc?`<div class="desc">${desc}</div>`:""}<div class="opts">`+
+   opts.map(o=>{const on=sel.includes(o);return `<label class="${on?"sel":""} ${!on&&full?"dis":""}"><input type="checkbox" data-mo="${esc(o)}" ${on?"checked":""} ${!on&&full?"disabled":""}>${o}</label>`}).join("")+`</div></div>`;
+}
+function menuRender(){
+  B.menu=B.menu||{};
+  let req=0,done=0;
+  const count=(id,max,opt)=>{if(opt)return;req++;if(((B.menu[id])||[]).length>=max)done++;};
+  document.getElementById("menuList").innerHTML=MENU.map(([g,chs])=>`<div class="mgrp"><h3>${g}</h3>`+chs.map(ch=>{
+    if(ch[0]==="STATIONS"){
+      const n=nStations(), sid="m_stations";
+      if((B.menu[sid]||[]).length>n){ B.menu[sid]=B.menu[sid].slice(0,n); STATIONS.forEach(st=>{ if(!B.menu[sid].includes(st.name)) st.subs.forEach(([l])=>delete B.menu[mid(st.name+"_"+l)]); }); bsave(); }
+      const picked=B.menu[sid]||[];
+      count(sid,n);
+      let h=chooser(sid,"Stations",n,STATIONS.map(x=>x.name),`1 station per 40 guests, rounded up, max 5. ${num(B.guests)} expected guests \u00f7 40 = ${n} station${n===1?"":"s"}. Updates when you change the guest count on the Budget tab.`);
+      picked.forEach(pn=>{const st=STATIONS.find(x=>x.name===pn); if(!st)return;
+        h+=`<div class="sub"><div class="mch"><h4><span>${st.name}</span></h4>${st.desc?`<div class="desc">${st.desc}</div>`:""}</div>`+
+          st.subs.map(([l,m,o])=>{const id=mid(st.name+"_"+l);count(id,m);return chooser(id,l,m,o)}).join("")+`</div>`;});
+      return h;
+    }
+    const [l,m,o,opt]=ch, id=mid(g+"_"+l); count(id,m,opt);
+    return chooser(id,l,m,o,"",opt);
+  }).join("")+`</div>`).join("");
+  const pr=document.getElementById("mProg"); pr.textContent=`${done} of ${req} done`; pr.className="tag "+(done===req?"done":"next");
+}
+document.getElementById("menuList").addEventListener("change",e=>{
+  const o=e.target.dataset.mo; if(o===undefined) return;
+  const box=e.target.closest("[data-ch]"), id=box.dataset.ch, max=+box.dataset.max;
+  let sel=B.menu[id]||[];
+  if(e.target.checked){ if(sel.length<max) sel.push(o); } else sel=sel.filter(x=>x!==o);
+  B.menu[id]=sel;
+  if(id==="m_stations"){ /* drop sub choices of removed stations */ STATIONS.forEach(st=>{ if(!sel.includes(st.name)) st.subs.forEach(([l])=>delete B.menu[mid(st.name+"_"+l)]); }); }
+  bsave(); menuRender();
+});
+document.getElementById("foodSub").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#foodSub button").forEach(x=>x.classList.toggle("on",x===b));
+  document.getElementById("f_menu").style.display=b.dataset.f==="menu"?"":"none";
+  document.getElementById("f_extras").style.display=b.dataset.f==="extras"?"":"none";
+});
+
+// ---------- Food add ons ----------
+const ADDONS=[
+ ["Passed Hors d'Oeuvres",[
+  ["Coconut Shrimp","Mango papaya glaze",7],["Baby Lamb Chops","",12],["Yellowfin Tuna Tartare","With avocado",10]]],
+ ["Cocktail Hour Stations",[
+  ["Grilled From the Sea","Salmon, shrimp &amp; scallop kabobs (GF)",15],["Tomahawk Steak Carving Station","",25],
+  ["Seafood Bar","Jumbo shrimp, littleneck clams, oysters, cocktail sauce &amp; mignonette",23],["+ Lobster on the Seafood Bar","",9],
+  ["Lobster Bar","Chilled Maine lobster with classic sauces",30],["Shrimp Bar","Jumbo shrimp cocktail",18],
+  ["Oyster Bay Bar","Blue Point oysters &amp; littleneck clams",12],["Oyster Bar","Bluepoint, Wellfleet, Kumamoto &amp; Belon",20],
+  ["Steamed Clam Bake","Clams, shrimp, lobster, mussels, steamers, corn, potatoes",30],["Sushi Bar","",15],["Fishing Festival","",18]]],
+ ["Carving Upgrades",[["Rack of Lamb","",8],["Veal Loin","",12],["Venison","",15]]],
+ ["Beverage Enhancements",[
+  ["Champagne Tower","",10],["Vodka &amp; Caviar Bar","",15],["Martini Station with Ice Carving","",25],
+  ["Vodka Bar","Strawberry infused vodka in an ice sculpture, assorted vodkas",1000,"flat"],["Ice Carving","",400,"flat"]]],
+ ["Main Course Upgrades",[
+  ["Roasted Chilean Sea Bass","Over mashed potatoes, port glaze",20],["Roasted Halibut","Tomato bruschetta, basil oil (in season May to Oct)",20],
+  ["Surf &amp; Turf","Filet mignon &amp; South African lobster",22],["Veal Chop (16 oz)","Mushroom au jus, crispy risotto",null],["Prime Rib Eye (16 oz)","Sautéed onions, baked potato",null]]],
+ ["Desserts",[
+  ["Passed Sorbets","",3],["Hot Chocolate Station","",10],["Tasting Plate","Select three: chocolate cake, cheesecake, cannoli, crème brûlée &amp; more",12],
+  ["Passed Miniature Desserts","Select four: mousse shooters, mini crème brûlée, mini cannoli &amp; more",12],
+  ["Bananas Foster &amp; Peach Beignets","",12],["S'mores Station","",12],["Ice Cream Station","Vanilla, chocolate, strawberry with toppings",12],
+  ["Chocolate Station","Dipped strawberries, soufflé, truffles, mousse, brownies",15],
+  ["Dessert Table","American, French &amp; Italian stations (4 desserts each at 150+ guests)",18]]]
+];
+const AMULT=()=>(1+num(B.fee)/100)*(1+num(B.tax)/100);
+const aid=(c,n)=>"a_"+(c+"_"+n).toLowerCase().replace(/[^a-z0-9]+/g,"_");
+function addonTotals(){
+  const g=num(B.guests); let pp=0, flat=0;
+  ADDONS.forEach(([c,items])=>items.forEach(it=>{ if(it[2]!==null && B.addons&&B.addons[aid(c,it[0])]){ if(it[3]==="flat") flat+=it[2]; else pp+=it[2]; }}));
+  return {pp,flat,sum:pp*g+flat};
+}
+function addonRender(){
+  document.getElementById("addonList").innerHTML=ADDONS.map(([c,items])=>`<div class="card"><h3>${c}</h3><div class="scroll"><table class="bt ao">
+   <colgroup><col style="width:6%"><col style="width:46%"><col style="width:14%"><col style="width:16%"><col style="width:18%"></colgroup>
+   <tr><th></th><th>Item</th><th class="num">Menu price</th><th class="num">All in price</th><th class="num">Est. cost all in</th></tr>`+
+   items.map(it=>{const id=aid(c,it[0]), mp=it[2]===null, flat=it[3]==="flat";
+     return `<tr><td>${mp?"":`<input type="checkbox" data-addon="${id}" ${B.addons&&B.addons[id]?"checked":""} style="width:auto">`}</td>
+     <td><span class="nm">${it[0]}</span>${it[1]?`<span class="ds">${it[1]}</span>`:""}</td>
+     <td class="num ds" style="display:table-cell">${mp?"Market price":$c(it[2])+(flat?" flat":" pp")}</td>
+     <td class="num"><b>${mp?"":$c(it[2]*AMULT())+(flat?" flat":" pp")}</b></td>
+     <td class="num" data-est="${id}">${mp?"Ask venue":""}</td></tr>`}).join("")+`</table></div></div>`).join("");
+}
+function addonCalc(V){
+  const g=num(B.guests), A=addonTotals(), mult=(1+num(B.fee)/100)*(1+num(B.tax)/100);
+  ADDONS.forEach(([c,items])=>items.forEach(it=>{ if(it[2]===null) return; const el=document.querySelector(`[data-est="${aid(c,it[0])}"]`); if(el) el.textContent=$f((it[3]==="flat"?it[2]:it[2]*g)*mult); }));
+  const credTot=Math.max(0,(num(B.min)-g)*num(B.pp)), used=Math.min(credTot,A.sum), extra=Math.max(0,A.sum-credTot);
+  const set=(id,v)=>document.getElementById(id).textContent=v;
+  set("aG",g); set("aPP",$c(A.pp*mult)); set("aSum",$f(A.sum*mult)); set("aCred",$f(used*mult)); set("aCredTot",$f(credTot)); set("aCredAll",$f(credTot*mult)); set("aNew",$f(extra*mult));
+}
+document.getElementById("addons").addEventListener("change",e=>{
+  const id=e.target.dataset.addon; if(!id) return;
+  B.addons=B.addons||{}; B.addons[id]=e.target.checked; bsave(); bCalc();
+});
+
+// ---------- Budget ----------
+const BK="wp-2027-budget";
+const PAY=[
+ ["Deposit 1 (25%), upon signing","Oct 20, 2026",10482.50],
+ ["Deposit 2 (25%)","Jan 13, 2027",10482.50],
+ ["Deposit 3 (25%)","Mar 13, 2027",10482.50],
+ ["Final payment (cash, bank check or wire)","May 30, 2027",null]
+];
+const defaultRows=[
+ ["Outside month of coordinator (optional)",0,"Venue already includes planning + day of coordinator"],
+ ["Photographer",5500,""],["Videographer / content creator",4000,""],
+ ["Florals & decor",8000,"Venue provides no decor; centerpieces, ceremony arch, bouquets"],
+ ["Band or DJ",4500,"Send contract to venue"],["Bilingual MC / mashup singer",2000,""],
+ ["Officiant",600,""],["Marriage license",35,"NY clerk fee"],
+ ["Wedding dress alterations",600,"Dress already purchased"],["Qipao for dinner (if needed)",800,""],["Groom tuxedo (white)",1200,"Ivory/white dinner jacket, black tux trousers"],["Groomsmen & bridesmaid rentals",0,"Black tuxedos + floor length dresses; usually paid by each attendant"],
+ ["Hair & makeup (incl. trial)",1500,""],["Wedding bands",3000,""],
+ ["Save the dates & invitations",1500,"Bilingual"],["Transportation",1500,""],
+ ["Favors & gift bags",800,""],["Rehearsal dinner",3000,""],
+ ["After party",0,"Not planned. $2,500++ up to 50 / $3,000++ up to 100"],
+ ["Vendor meals",0,"~$92.63 each; guarantee credit can cover it"],
+ ["Cake add ons (fondant, sugar flowers)",0,"Venue upcharge"],
+ ["Morning after brunch",0,"If added"]
+].map(r=>({item:r[0],est:r[1],act:"",paid:"",note:r[2]}));
+const defaults={v:4,total:100000,guests:130,min:160,pp:185.25,cer:2000,up:0,fee:22,tax:8.625,pay:[true,false,false,false],rows:defaultRows};
+let B;
+try{B=JSON.parse(localStorage.getItem(BK))}catch(e){}
+if(!B) B=JSON.parse(JSON.stringify(defaults));
+if(B.v===3){B.pay[0]=true;B.v=4;}
+if(B.v!==4){
+  const keep={total:B.total||100000};
+  const rows=JSON.parse(JSON.stringify(defaultRows));
+  B=Object.assign(JSON.parse(JSON.stringify(defaults)),keep,{rows});
+}
+if(!B.rows.some(r=>r.item==="After party")){const i=B.rows.findIndex(r=>r.item==="Vendor meals");B.rows.splice(i<0?B.rows.length:i,0,{item:"After party",est:0,act:"",paid:"",note:"Not planned. $2,500++ up to 50 / $3,000++ up to 100"});}
+B.rows.forEach(r=>{if(r.item==="After party")r.note="Not planned. $2,500++ up to 50 / $3,000++ up to 100";});
+B.rows.forEach(r=>{if(r.note==="Send contract to venue; Sunday 8 PM sound limit")r.note="Send contract to venue";
+ if(r.item==="Wedding gown & alterations"){r.item="Wedding dress alterations";r.est=600;r.note="Dress already purchased";}
+ if(r.item==="Qipao for dinner")r.item="Qipao for dinner (if needed)";
+ if(r.item==="Groom suit / tux")r.item="Groom tuxedo";
+ if(r.item==="Groom tuxedo"){r.item="Groom tuxedo (white)";if(!r.note)r.note="Ivory/white dinner jacket, black tux trousers";}
+ if(r.item==="Groomsmen & bridesmaid rentals"&&r.note==="Usually paid by each attendant; enter if you cover it")r.note="Black tuxedos + floor length dresses; usually paid by each attendant";});
+if(!B.rows.some(r=>r.item.startsWith("Groomsmen & bridesmaid"))){const i=B.rows.findIndex(r=>r.item.startsWith("Groom tuxedo"));B.rows.splice(i+1,0,{item:"Groomsmen & bridesmaid rentals",est:0,act:"",paid:"",note:"Black tuxedos + floor length dresses; usually paid by each attendant"});}
+const bsave=()=>{try{localStorage.setItem(BK,JSON.stringify(B))}catch(e){}};
+bsave();
+const num=v=>{const n=parseFloat(String(v).replace(/[$,\s]/g,""));return isNaN(n)?0:n};
+const $f=n=>(n<0?"\u2212$":"$")+Math.round(Math.abs(n)).toLocaleString();
+const $c=n=>"$"+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+
+function bRows(){
+  document.getElementById("bRows").innerHTML=B.rows.map((r,i)=>`<tr>
+   <td><input data-r="${i}" data-k="item" value="${esc(r.item)}"></td>
+   <td class="num"><input data-r="${i}" data-k="est" inputmode="numeric" value="${r.est===""?"":num(r.est).toLocaleString()}"></td>
+   <td class="num"><input data-r="${i}" data-k="act" inputmode="numeric" value="${r.act===""?"":num(r.act).toLocaleString()}"></td>
+   <td class="num"><input data-r="${i}" data-k="paid" inputmode="numeric" value="${r.paid===""?"":num(r.paid).toLocaleString()}"></td>
+   <td><input data-r="${i}" data-k="note" value="${esc(r.note)}"></td>
+   <td><button class="x" data-del="${i}" title="Remove">&times;</button></td></tr>`).join("");
+}
+function venue(){
+  const g=num(B.guests), min=num(B.min), pp=num(B.pp), cer=num(B.cer), up=num(B.up);
+  const billed=Math.max(g,min), A=addonTotals(), base=billed*pp, fb=Math.max(base, g*pp+A.sum), sub=fb+cer+up;
+  const fee=sub*num(B.fee)/100, tax=(sub+fee)*num(B.tax)/100, grand=sub+fee+tax;
+  const pct5=(base+cer)*0.05, tipMid=1000+pct5*2;
+  const deps=PAY.slice(0,3).reduce((a,p)=>a+p[2],0);
+  return {g,min,pp,cer,up,billed,fb,base,A,sub,fee,tax,grand,pct5,tipMid,credit:Math.max(0,base-g*pp-A.sum),final:grand-deps};
+}
+function paySched(){
+  const V=venue();
+  document.getElementById("paySched").innerHTML=PAY.map((p,i)=>`<tr>
+    <td><input type="checkbox" data-pay="${i}" ${B.pay[i]?"checked":""} style="width:auto"></td>
+    <td>${p[0]}</td><td>${p[1]}</td><td class="num">${$c(p[2]===null?V.final:p[2])}</td></tr>`).join("");
+}
+function bInit(){
+  document.getElementById("bTotal").value=num(B.total).toLocaleString();
+  document.getElementById("vGuests").value=B.guests;
+  document.getElementById("vMin").value=B.min;
+  document.getElementById("vPP").value=B.pp;
+  document.getElementById("vUp").value=B.up||"";
+  bRows(); addonRender(); menuRender(); bCalc();
+}
+function bCalc(){
+  const V=venue();
+  const set=(id,v)=>document.getElementById(id).textContent=v;
+  document.getElementById("vFBlbl").innerHTML = V.g<V.min
+    ? `Wedding Package: <b>F&amp;B minimum applied</b> (${V.min} guaranteed \u00d7 ${$c(V.pp)}; you expect ${V.g})`
+    : `Wedding Package (${V.billed} guests \u00d7 ${$c(V.pp)})`;
+  set("vFB",$c(V.base));
+  const nSel=Object.values(B.addons||{}).filter(Boolean).length;
+  set("vAOlbl",`Food add ons (${nSel} item${nSel===1?"":"s"} from the Food Add Ons tab, menu price)`);
+  set("vAO",$c(V.A.sum)); set("vAOcred",(V.A.sum?"\u2212":"")+$c(V.base-(V.fb-V.A.sum)>0?Math.min(V.A.sum,V.base-V.g*V.pp):0)); set("vCer",$c(V.cer)); set("vUpAmt",$c(V.up)); set("vSub",$c(V.sub));
+  set("vFee",$c(V.fee)); set("vTaxAmt",$c(V.tax)); set("vGrand",$c(V.grand));
+  set("vTip",$f(V.tipMid)); set("vTotal",$f(V.grand+V.tipMid));
+  let oE=0,oA=0,oP=0; B.rows.forEach(r=>{oE+=num(r.est);oA+=num(r.act);oP+=num(r.paid)});
+  set("oEst",$f(oE)); set("oAct",$f(oA)); set("oPaid",$f(oP));
+  const venuePaid=0;
+  const est=V.grand+V.tipMid+oE, left=num(B.total)-est;
+  set("bEst",$f(est)); set("bEstBrk",`Venue ${$f(V.grand)} + tips ${$f(V.tipMid)} + vendors ${$f(oE)}`); set("bPaid",$f(oP+venuePaid));
+  const L=document.getElementById("bLeft"); L.textContent=$f(left); L.className=left<0?"neg":"pos";
+  document.getElementById("ppHint").innerHTML = V.min>V.g
+    ? `You expect ${V.g} guests but the contract guarantees ${V.min}, so you pay for ${V.min - V.g} unused covers. ${V.A.sum?`After ${$f(V.A.sum)} of food add ons, <b>${$f(V.credit)}</b> of credit remains`:`That's a <b>${$f(V.credit)}</b> credit`} (before fees and tax) you can put toward vendor meals or food and beverage enhancements.`
+    : `Guest count meets or exceeds the ${V.min} guarantee; each extra adult adds ${$c(V.pp)} plus 22% facility fee and tax.`;
+  // gratuities tab
+  const RMD=V.base+V.cer, r5=RMD*0.05, over=V.sub>RMD+0.005, c5=V.sub*0.05;
+  ["tFB","tFB2","tCK","tCK2"].forEach(id=>set(id,$f(r5)));
+  set("tBill1","(5% of "+$f(RMD)+" minimum)"); set("tBill2","(5% of "+$f(RMD)+" minimum)");
+  set("tLow",$f(700+r5*2)); set("tHigh",$f(1300+r5*2));
+  document.getElementById("tOver").style.display=over?"":"none";
+  set("tOverTxt",`With your add ons the bill is ${$f(V.sub)}, which makes each 5% line ${$f(c5)} and the total ${$f(700+c5*2)} to ${$f(1300+c5*2)}.`);
+  document.getElementById("tBasis").innerHTML=`Based on the required Minimum Financial Requirement of <b>${$f(RMD)}</b> (${V.min} guaranteed guests &times; ${$c(V.pp)} + ${$f(V.cer)} ceremony fee), before the 22% facility fee and tax. This is the least the bill can be, so it's the floor for tips. The contract says the facility fee is <b>not</b> a gratuity, so staff tips are separate.`;
+  addonCalc(V);
+}
+document.getElementById("budget").addEventListener("input",e=>{
+  const el=e.target, map={bTotal:"total",vGuests:"guests",vMin:"min",vPP:"pp",vUp:"up"};
+  if(map[el.id]){ B[map[el.id]]=el.value; if(el.id==="vGuests"||el.id==="vMin") menuRender(); }
+  else if(el.dataset.r!==undefined) B.rows[+el.dataset.r][el.dataset.k]=el.value;
+  else return;
+  bsave(); bCalc();
+});
+document.getElementById("budget").addEventListener("change",e=>{
+  if(e.target.dataset.pay!==undefined){B.pay[+e.target.dataset.pay]=e.target.checked;bsave();bCalc();}
+});
+document.getElementById("budget").addEventListener("click",e=>{
+  const d=e.target.closest("[data-del]");
+  if(d){B.rows.splice(+d.dataset.del,1);bsave();bRows();bCalc();}
+});
+document.getElementById("addRow").onclick=()=>{B.rows.push({item:"New item",est:0,act:"",paid:"",note:""});bsave();bRows();bCalc();};
+bInit();
+</script>
+</body>
+</html>
