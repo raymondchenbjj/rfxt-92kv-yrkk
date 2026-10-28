@@ -448,15 +448,15 @@ const WED = new Date(2027,5,13);
 // phases: [title, monthsBefore or date label, items]
 const phases = [
  {id:"now", title:"Right Now", when:"This week", due:new Date(2026,9,27), items:[
-  ["Schedule intro call with the venue coordinator","Booked as the Welcome Call in the venue portal, Nov 5","Email"],
+  ["Schedule intro call with the venue coordinator","Done: welcome call held Oct 28, 2026","Email"],
   ["Pay venue deposit 1: $10,482.50","Paid at signing, Oct 2026","Contract"],
   ["Set the wedding budget","Venue numbers are filled in; adjust outside vendor estimates in the Budget tab",""],
   ["Accept venue planning platform invite","All venue planning info will live there","Email"],
   ["Always cc the sales manager on wedding emails","","Email"],
   ["Create folders for vendor contracts and vendor info","Saving them in the Wedding Planning folder","Packet"]
  ]},
- {id:"portal", title:"Venue Portal Tasks", when:"From the venue planning platform &middot; first due Nov 5, 2026", due:new Date(2026,10,5), items:[
-  ["Welcome call","Due Nov 5, 2026","Portal"],
+ {id:"portal", title:"Venue Portal Tasks", when:"From the venue planning platform &middot; next due Dec 21, 2026", due:new Date(2026,11,21), items:[
+  ["Welcome call","Done Oct 28, 2026","Portal"],
   ["About Us","Due Dec 21, 2026","Portal"],
   ["Drop off list","","Portal"],
   ["Wedding timeline","File upload","Portal"],
@@ -517,6 +517,7 @@ try{state=JSON.parse(localStorage.getItem("wp-2027")||"{}")}catch(e){}
 if(!state._dress){state._dress=true;state["t_get_the_wedding_dress"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._fold){state._fold=true;state["t_create_folders_for_vendor_contracts_and_vendor_info"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._portal){state._portal=true;state["t_accept_venue_planning_platform_invite"]=true;state["t_schedule_intro_call_with_the_venue_coordinator"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+if(!state._wcall){state._wcall=true;state["t_welcome_call"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._dep1){state._dep1=true;state["t_pay_venue_deposit_1_10_482_50"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 const save=()=>{try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}};
 const today=new Date(); today.setHours(0,0,0,0);
