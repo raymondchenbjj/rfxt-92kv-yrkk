@@ -380,14 +380,16 @@ a{color:var(--accent)}
   </div>
   <div class="card">
     <h3>Groom's side <span class="tag done" id="g1Tag"></span></h3>
-    <p class="note">From the invitation list spreadsheet (Oct 22, 2026). Names stay in the spreadsheet.</p>
+    <p class="note">From the invitation list spreadsheet (Nov 1, 2026). Names stay in the spreadsheet.</p>
     <table><tr><th>Group</th><th class="num" style="text-align:right">Invitations</th><th class="num" style="text-align:right">People</th></tr><tbody id="g1Rows"></tbody></table>
-    <p class="note" style="margin-top:10px">To fix on the list: one entry has "??" for headcount (not counted), one is 3.5 people, and no one has an A/B/C tier yet, so there's nothing to cut from if you go over.</p>
+    <p class="note" style="margin-top:10px">To fix on the list: one family entry has "??" for headcount (not counted), and no one has an A/B/C tier yet, so there's nothing to cut from if you go over.</p>
   </div>
   <div class="card">
-    <h3>Bride's side</h3>
-    <p class="note">Not on the list yet. Enter an estimate until it's added, including who can realistically travel.</p>
-    <div class="vgrid" style="grid-template-columns:1fr 1fr"><label>Estimated people<input id="g2In" inputmode="numeric" placeholder="0"></label></div>
+    <h3>Bride's side <span class="tag done" id="g2Tag"></span></h3>
+    <p class="note">From the invitation list spreadsheet (Nov 1, 2026). Names stay in the spreadsheet.</p>
+    <table><tr><th>Group</th><th class="num" style="text-align:right">Invitations</th><th class="num" style="text-align:right">People</th></tr><tbody id="g2Rows"></tbody></table>
+    <p class="note" style="margin-top:10px">Six entries have no headcount yet (cousins, family friends and four college friends), plus the one on the groom's side. Enter an estimate for all of them until the list is filled in.</p>
+    <div class="vgrid" style="grid-template-columns:1fr 1fr"><label>Estimate for entries without a headcount<input id="g2In" inputmode="numeric" placeholder="0"></label></div>
     <button class="addrow" id="gUse">Use projected total as expected guests on the Budget tab</button>
   </div>
 </section>
@@ -473,7 +475,7 @@ const phases = [
  {id:"catch", title:"Catch Up", when:"12 to 8 month items &middot; by end of Nov 2026", due:new Date(2026,10,30), items:[
   ["Get at least 3 quotes for every vendor","Track them in the Vendor Quotes tab",""],
   ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this. First photo quote is in",""],
-  ["Make the wedding guest list","Groom's side drafted (~89). Add the other side and A/B/C tiers. Up to 160 adds no food cost",""],
+  ["Make the wedding guest list","Both sides drafted: 123 people so far, 7 entries without a headcount. Add A/B/C tiers. Up to 160 adds no food cost",""],
   ["Finalize guest invitation list","",""],
   ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
   ["Hire florist and/or event decorator","",""],
@@ -488,8 +490,8 @@ const phases = [
  ]},
  {id:"std", title:"Save the Dates on Zola", when:"Target send week of Dec 7, 2026 (about 6 months out)", due:new Date(2026,11,7), items:[
   ["Create a free Zola account and wedding profile","Guest list, Contact Collector and digital save the dates are free","Zola"],
-  ["Add the bride's side to the invitation list","Groom's side is drafted (58 invitations, about 89 people)",""],
-  ["Fix the open headcounts on the list","One entry is ?? and one is 3.5",""],
+  ["Add the bride's side to the invitation list","Added Nov 1: 25 invitations, 30 people counted so far",""],
+  ["Fix the open headcounts on the list","7 entries have no number yet, including cousins and family friends",""],
   ["Upload the invitation list to Zola","Guest List, Add Guests, Upload Spreadsheet. It reads the current layout; mark households Definitely Invited","Zola"],
   ["Send Contact Collector to get addresses, emails and phones","The list has none yet. Text or email the link to guests, or have Zola message them","Zola"],
   ["Decide digital or paper save the dates","Digital is free by text or email. Paper costs per card, and Zola prints envelope addresses free","Zola"],
@@ -529,6 +531,7 @@ if(!state._fold){state._fold=true;state["t_create_folders_for_vendor_contracts_a
 if(!state._portal){state._portal=true;state["t_accept_venue_planning_platform_invite"]=true;state["t_schedule_intro_call_with_the_venue_coordinator"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._wcall){state._wcall=true;state["t_welcome_call"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._dep1){state._dep1=true;state["t_pay_venue_deposit_1_10_482_50"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+if(!state._bride){state._bride=true;state["t_add_the_bride_s_side_to_the_invitation_list"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 const save=()=>{try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}};
 const today=new Date(); today.setHours(0,0,0,0);
 
@@ -574,11 +577,16 @@ document.getElementById("reset").onclick=()=>{state={};save();render();};
 render();
 
 // ---------- Guest count ----------
-const G1=[["Family", 39, 17], ["Friends (Flushing)", 17.5, 13], ["Friends (BJJ)", 3, 3], ["Friends (College)", 19, 16], ["Friends (HS)", 10, 9]];
+const G1=[["Family", 41, 23], ["Friends (Flushing)", 18, 13], ["Friends (BJJ)", 3, 3], ["Friends (College)", 19, 16], ["Friends (HS)", 12, 10]];
+const G2=[["Family", 5, 3], ["Family friends", 0, 1], ["Friends (College)", 22, 19], ["Friends (HS)", 3, 2]];
+const gRows=G=>G.map(r=>`<tr><td>${r[0]}</td><td style="text-align:right">${r[2]}</td><td style="text-align:right">${r[1]}</td></tr>`).join("")+`<tr><td><b>Total</b></td><td style="text-align:right"><b>${G.reduce((a,r)=>a+r[2],0)}</b></td><td style="text-align:right"><b>${G.reduce((a,r)=>a+r[1],0)}</b></td></tr>`;
+const gSum=G=>G.reduce((a,r)=>a+r[1],0);
 function gCalc(){
-  const g1=G1.reduce((a,r)=>a+r[1],0), inv=G1.reduce((a,r)=>a+r[2],0), g2=num(B.g2||0), tot=Math.ceil(g1+g2), gap=tot-160;
+  const g1=gSum(G1), g2=gSum(G2)+num(B.gx||0), tot=Math.ceil(g1+g2), gap=tot-160;
   const mult=(1+num(B.fee)/100)*(1+num(B.tax)/100);
-  document.getElementById("g1Rows").innerHTML=G1.map(r=>`<tr><td>${r[0]}</td><td style="text-align:right">${r[2]}</td><td style="text-align:right">${r[1]}</td></tr>`).join("")+`<tr><td><b>Total</b></td><td style="text-align:right"><b>${inv}</b></td><td style="text-align:right"><b>${g1}</b></td></tr>`;
+  document.getElementById("g1Rows").innerHTML=gRows(G1);
+  document.getElementById("g2Rows").innerHTML=gRows(G2);
+  document.getElementById("g2Tag").textContent=`${gSum(G2)} people`;
   document.getElementById("g1Tag").textContent=`${Math.ceil(g1)} people`;
   document.getElementById("gTot").textContent=tot;
   const G=document.getElementById("gGap"); G.textContent=gap>0?`+${gap} over`:gap===0?"Exactly 160":`${-gap} under`; G.className=gap>0?"neg":"pos";
@@ -588,10 +596,10 @@ function gCalc(){
   document.getElementById("gMeter").classList.toggle("met",tot>=160);
   document.getElementById("gSub").innerHTML= gap>0
     ? `${gap} guests over the guarantee would add about <b>${$f(gap*num(B.pp)*mult)}</b> to the venue bill (fee and tax included). Time to use A/B/C tiers.`
-    : `${-gap} more guests fit at no extra food cost, since you pay for 160 either way.${B.g2?"":" Add the other side's estimate below to see the real total."}`;
+    : `${-gap} more guests fit at no extra food cost, since you pay for 160 either way.${B.gx?"":" Add an estimate for the entries without a headcount below to see the real total."}`;
 }
-document.getElementById("g2In").addEventListener("input",e=>{B.g2=e.target.value;bsave();gCalc();});
-document.getElementById("gUse").onclick=()=>{const g1=G1.reduce((a,r)=>a+r[1],0);B.guests=Math.ceil(g1+num(B.g2||0));document.getElementById("vGuests").value=B.guests;bsave();menuRender();bCalc();document.getElementById("gUse").textContent="Done: Budget now uses "+B.guests+" guests";};
+document.getElementById("g2In").addEventListener("input",e=>{B.gx=e.target.value;bsave();gCalc();});
+document.getElementById("gUse").onclick=()=>{B.guests=Math.ceil(gSum(G1)+gSum(G2)+num(B.gx||0));document.getElementById("vGuests").value=B.guests;bsave();menuRender();bCalc();document.getElementById("gUse").textContent="Done: Budget now uses "+B.guests+" guests";};
 
 // ---------- Vendor quotes ----------
 const QCATS=[["Photography","Photographer"],["Videography","Videographer / content creator"],["Photo booth","Photo booth"],["Florals & decor","Florals & decor"],["Band or DJ","Band or DJ"],["Bilingual MC / singer","Bilingual MC / mashup singer"],["Officiant","Officiant"],["Hair & makeup","Hair & makeup (incl. trial)"],["Transportation","Transportation"],["Invitations & stationery","Save the dates & invitations"],["Tux & dress rentals","Groomsmen & bridesmaid rentals"],["Favors","Favors & gift bags"],["Rehearsal dinner","Rehearsal dinner"],["Wedding bands","Wedding bands"]];
@@ -871,7 +879,7 @@ function bInit(){
   document.getElementById("bTotal").value=num(B.total).toLocaleString();
   document.getElementById("vGuests").value=B.guests;
   document.getElementById("vPP").value=B.pp;
-  bRows(); addonRender(); menuRender(); qRender(); document.getElementById("g2In").value=B.g2||""; bCalc();
+  bRows(); addonRender(); menuRender(); qRender(); document.getElementById("g2In").value=B.gx||""; bCalc();
 }
 function bCalc(){
   const V=venue();
