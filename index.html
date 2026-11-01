@@ -382,14 +382,14 @@ a{color:var(--accent)}
     <h3>Groom's side <span class="tag done" id="g1Tag"></span></h3>
     <p class="note">From the invitation list spreadsheet (Nov 1, 2026). Names stay in the spreadsheet.</p>
     <table><tr><th>Group</th><th class="num" style="text-align:right">Invitations</th><th class="num" style="text-align:right">People</th></tr><tbody id="g1Rows"></tbody></table>
-    <p class="note" style="margin-top:10px">To fix on the list: one family entry has "??" for headcount (not counted), and no one has an A/B/C tier yet, so there's nothing to cut from if you go over.</p>
+    <p class="note" style="margin-top:10px">To fix on the list: one family entry is on the waitlist (not counted), and no one has an A/B/C tier yet, so there's nothing to cut from if you go over.</p>
   </div>
   <div class="card">
     <h3>Bride's side <span class="tag done" id="g2Tag"></span></h3>
     <p class="note">From the invitation list spreadsheet (Nov 1, 2026). Names stay in the spreadsheet.</p>
     <table><tr><th>Group</th><th class="num" style="text-align:right">Invitations</th><th class="num" style="text-align:right">People</th></tr><tbody id="g2Rows"></tbody></table>
-    <p class="note" style="margin-top:10px">Six entries have no headcount yet (cousins, family friends and four college friends), plus the one on the groom's side. Enter an estimate for all of them until the list is filled in.</p>
-    <div class="vgrid" style="grid-template-columns:1fr 1fr"><label>Estimate for entries without a headcount<input id="g2In" inputmode="numeric" placeholder="0"></label></div>
+    <p class="note" style="margin-top:10px">Family friends estimated at about 20. Six entries are on a waitlist (cousins, four college friends and one group on the groom's side): no headcount and no save the date unless there's room under 160.</p>
+    <div class="vgrid" style="grid-template-columns:1fr 1fr"><label>Waitlist people to test (optional)<input id="g2In" inputmode="numeric" placeholder="0"></label></div>
     <button class="addrow" id="gUse">Use projected total as expected guests on the Budget tab</button>
   </div>
 </section>
@@ -475,7 +475,7 @@ const phases = [
  {id:"catch", title:"Catch Up", when:"12 to 8 month items &middot; by end of Nov 2026", due:new Date(2026,10,30), items:[
   ["Get at least 3 quotes for every vendor","Track them in the Vendor Quotes tab",""],
   ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this. First photo quote is in",""],
-  ["Make the wedding guest list","Both sides drafted: 123 people so far, 7 entries without a headcount. Add A/B/C tiers. Up to 160 adds no food cost",""],
+  ["Make the wedding guest list","Both sides drafted: about 143 people (family friends estimated at 20), 6 entries waitlisted. Add A/B/C tiers. Up to 160 adds no food cost",""],
   ["Finalize guest invitation list","",""],
   ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
   ["Hire florist and/or event decorator","",""],
@@ -490,13 +490,13 @@ const phases = [
  ]},
  {id:"std", title:"Save the Dates on Zola", when:"Target send week of Dec 7, 2026 (about 6 months out)", due:new Date(2026,11,7), items:[
   ["Create a free Zola account and wedding profile","Guest list, Contact Collector and digital save the dates are free","Zola"],
-  ["Add the bride's side to the invitation list","Added Nov 1: 25 invitations, 30 people counted so far",""],
-  ["Fix the open headcounts on the list","7 entries have no number yet, including cousins and family friends",""],
-  ["Upload the invitation list to Zola","Guest List, Add Guests, Upload Spreadsheet. It reads the current layout; mark households Definitely Invited","Zola"],
+  ["Add the bride's side to the invitation list","Added Nov 1: 25 invitations, about 50 people with family friends at 20",""],
+  ["Fix the open headcounts on the list","Done Nov 1: family friends about 20; the other 6 entries are on the waitlist",""],
+  ["Upload the invitation list to Zola","Guest List, Add Guests, Upload Spreadsheet. It reads the current layout; mark households Definitely Invited and the waitlist Maybe","Zola"],
   ["Send Contact Collector to get addresses, emails and phones","The list has none yet. Text or email the link to guests, or have Zola message them","Zola"],
   ["Decide digital or paper save the dates","Digital is free by text or email. Paper costs per card, and Zola prints envelope addresses free","Zola"],
   ["Pick a design with the date, Glen Cove and the wedding website","Bilingual wording if it should match the invitations","Zola"],
-  ["Send the save the dates","Before the December holidays; follow up with anyone who did not get it","Zola"]
+  ["Send the save the dates","Before the December holidays, to Definitely Invited only. Waitlist gets one only if the count leaves room under 160","Zola"]
  ]},
  {m:7, items:[["Book hair and makeup artist","Top artists book up for June weekends; trial comes later",""],["Book rehearsal dinner venue","Can be held at the venue",""],["Decide on a qipao for the dinner change","Custom or tailored qipaos can take 6 to 10 weeks",""],["Order decor and rentals (chargers, specialty linens or chairs)","Venue already includes tables, standard chairs, floor length linens and the dance floor",""],["Hire officiant","",""]]},
  {m:6, items:[["Book transportation for you and guests","",""],["Meet invitation designers and finalize","Bilingual invitations",""],["Pick the rental styles for groomsmen and bridesmaids","Groomsmen in black tuxedos; bridesmaids in floor length dresses to match black tie",""]]},
@@ -532,6 +532,7 @@ if(!state._portal){state._portal=true;state["t_accept_venue_planning_platform_in
 if(!state._wcall){state._wcall=true;state["t_welcome_call"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._dep1){state._dep1=true;state["t_pay_venue_deposit_1_10_482_50"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._bride){state._bride=true;state["t_add_the_bride_s_side_to_the_invitation_list"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+if(!state._wait){state._wait=true;state["t_fix_the_open_headcounts_on_the_list"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 const save=()=>{try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}};
 const today=new Date(); today.setHours(0,0,0,0);
 
@@ -578,7 +579,7 @@ render();
 
 // ---------- Guest count ----------
 const G1=[["Family", 41, 23], ["Friends (Flushing)", 18, 13], ["Friends (BJJ)", 3, 3], ["Friends (College)", 19, 16], ["Friends (HS)", 12, 10]];
-const G2=[["Family", 5, 3], ["Family friends", 0, 1], ["Friends (College)", 22, 19], ["Friends (HS)", 3, 2]];
+const G2=[["Family", 5, 3], ["Family friends (estimate)", 20, 1], ["Friends (College)", 22, 19], ["Friends (HS)", 3, 2]];
 const gRows=G=>G.map(r=>`<tr><td>${r[0]}</td><td style="text-align:right">${r[2]}</td><td style="text-align:right">${r[1]}</td></tr>`).join("")+`<tr><td><b>Total</b></td><td style="text-align:right"><b>${G.reduce((a,r)=>a+r[2],0)}</b></td><td style="text-align:right"><b>${G.reduce((a,r)=>a+r[1],0)}</b></td></tr>`;
 const gSum=G=>G.reduce((a,r)=>a+r[1],0);
 function gCalc(){
@@ -596,7 +597,7 @@ function gCalc(){
   document.getElementById("gMeter").classList.toggle("met",tot>=160);
   document.getElementById("gSub").innerHTML= gap>0
     ? `${gap} guests over the guarantee would add about <b>${$f(gap*num(B.pp)*mult)}</b> to the venue bill (fee and tax included). Time to use A/B/C tiers.`
-    : `${-gap} more guests fit at no extra food cost, since you pay for 160 either way.${B.gx?"":" Add an estimate for the entries without a headcount below to see the real total."}`;
+    : `${-gap} more guests fit at no extra food cost, since you pay for 160 either way.${B.gx?"":" Waitlisted entries are not counted."}`;
 }
 document.getElementById("g2In").addEventListener("input",e=>{B.gx=e.target.value;bsave();gCalc();});
 document.getElementById("gUse").onclick=()=>{B.guests=Math.ceil(gSum(G1)+gSum(G2)+num(B.gx||0));document.getElementById("vGuests").value=B.guests;bsave();menuRender();bCalc();document.getElementById("gUse").textContent="Done: Budget now uses "+B.guests+" guests";};
