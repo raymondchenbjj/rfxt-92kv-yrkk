@@ -122,7 +122,15 @@ a{color:var(--accent)}
 .quote .choose{border:1px solid var(--sage);background:none;color:var(--sage);border-radius:99px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
 .quote.chosen .choose{background:var(--sage);color:var(--card)}
 .quote .qx{position:absolute;top:6px;right:8px}
-.qadd{margin:0 18px 16px}
+.qadd{margin:0}
+.qfoot{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 18px 16px}
+.qfoot .qsave{border:1px solid var(--sage);background:var(--sage);color:var(--card);border-radius:8px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer;margin-top:10px}
+.qfoot .qsave:disabled{opacity:.6;cursor:wait}
+.qmsg{font-size:12.5px;color:var(--muted);margin-top:10px}
+.qmsg.bad{color:var(--rose)}
+.unsaved{color:var(--rose)}
+#qConn>summary{cursor:pointer;list-style:none}
+#qConn>summary::-webkit-details-marker{display:none}
 @media (max-width:860px){.qgrid{grid-template-columns:1fr}}
 .x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
 .addrow{margin-top:10px;background:none;border:1px dashed var(--line);color:var(--accent);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
@@ -361,8 +369,17 @@ a{color:var(--accent)}
 <section class="panel" id="quotes">
   <div class="card">
     <h3>Vendor Quotes <span class="tag next" id="qProg"></span></h3>
-    <p class="note" style="margin:0">Goal: at least 3 quotes for every vendor before choosing. Enter each quote's price and tax rate to see the all in cost. Tap <b>Choose</b> on the winner and its all in price is copied to that vendor's <b>Actual</b> column on the Budget tab.</p>
+    <p class="note" style="margin:0">Goal: at least 3 quotes for every vendor before choosing. Enter each quote's price and tax rate to see the all in cost. Tap <b>Choose</b> on the winner and its all in price is copied to that vendor's <b>Actual</b> column on the Budget tab. Tap <b>Save Quotes</b> at the bottom of a category to save new and edited quotes to your master quotes file.</p>
   </div>
+  <details class="card" id="qConn"><summary><h3 style="display:inline">Saving quotes</h3> <span class="tag later" id="qConnState">Folder not connected</span></summary>
+    <p class="note">Save Quotes writes every quote, with names and contacts, to the master file (Vendor Quotes Master.json, plus a .csv copy) in your Wedding Planning folder, then updates this public dashboard with names and contacts hidden. Your folder and token stay in this browser only. Setup steps are in the Notes folder.</p>
+    <p class="note"><b>1.</b> <button class="addrow" id="qPick">Choose Wedding Planning folder</button> <button class="addrow" id="qRe" style="display:none">Reconnect folder</button> <input type="file" id="qFile" accept=".json" style="display:none"></p>
+    <p class="note" id="qFsNote" style="display:none">This browser can't write to folders, so Save Quotes downloads the master file instead. Use Chrome or Edge for one click saving.</p>
+    <div class="vgrid" style="grid-template-columns:2fr 1fr"><label><b>2.</b> GitHub token (to update the public dashboard)<input id="qGh" type="password" autocomplete="off" placeholder="github_pat_..."></label><label>&nbsp;<button class="addrow" id="qGhSave" style="margin-top:3px">Save token</button></label></div>
+    <p class="note" id="qGhState"></p>
+    <button class="addrow" id="qDisc">Disconnect this browser</button>
+    <div class="qmsg" id="qSheetMsg"></div>
+  </details>
   <div id="qList"></div>
 </section>
 
@@ -614,6 +631,10 @@ function qInit(){
 }
 const qAll=q=>num(q.price)*(1+num(q.tax)/100);
 const qFilled=q=>num(q.price)>0;
+function qSum(k){
+  const a=B.quotes[k], n=a.filter(qFilled).length, ch=B.qChosen[k], prices=a.filter(qFilled).map(qAll), lo=prices.length?Math.min(...prices):0;
+  return `${n} of 3 quotes${ch!==undefined&&a[ch]?` &middot; chosen: ${esc(a[ch].v||"Quote "+(ch+1))}`:""}${prices.length>1?` &middot; lowest ${$f(lo)}`:""}${qUnsaved(a)?` &middot; <span class="unsaved">${qUnsaved(a)} unsaved</span>`:""}`;
+}
 function qRender(){
   qInit();
   let done=0;
@@ -621,16 +642,16 @@ function qRender(){
     const a=B.quotes[k], n=a.filter(qFilled).length, ch=B.qChosen[k];
     if(n>=3) done++;
     const prices=a.filter(qFilled).map(qAll), lo=prices.length?Math.min(...prices):0;
-    return `<details class="qcat" ${n||k==="Photography"?"open":""}><summary><h3>${k}</h3><span class="qs">${n} of 3 quotes${ch!==undefined&&a[ch]?` &middot; chosen: ${esc(a[ch].v||"Quote "+(ch+1))}`:""}${prices.length>1?` &middot; lowest ${$f(lo)}`:""}</span></summary>
+    return `<details class="qcat" ${n||k==="Photography"?"open":""}><summary><h3>${k}</h3><span class="qs" data-qsum="${esc(k)}">${qSum(k)}</span></summary>
       <div class="qgrid">`+a.map((q,i)=>`<div class="quote ${ch===i?"chosen":""}" data-qc="${esc(k)}" data-qi="${i}">
-        <button class="x qx" data-qdel title="Remove">&times;</button>
+        <button class="x qx" data-qdel title="Remove from this view (a saved quote stays in the master file)">&times;</button>
         <label>Vendor<input data-qf="v" value="${esc(q.v)}" placeholder="Quote ${i+1}"></label>
         <label>Contact<input data-qf="c" value="${esc(q.c)}" placeholder="Email or phone"></label>
         <div class="row2"><label>Price ($)<input data-qf="price" inputmode="decimal" value="${q.price===""?"":num(q.price)}"></label><label>Tax %<input data-qf="tax" inputmode="decimal" value="${q.tax}"></label></div>
         <label>What's included<textarea data-qf="inc">${esc(q.inc)}</textarea></label>
         <label>Notes<input data-qf="notes" value="${esc(q.notes)}"></label>
         <div class="acts"><div><label>All in</label><div class="allin" data-qall>${qFilled(q)?$f(qAll(q)):"\u2014"}</div></div><button class="choose" data-qchoose>${ch===i?"Chosen":"Choose"}</button></div>
-      </div>`).join("")+`</div><button class="addrow qadd" data-qadd="${esc(k)}">+ Add quote</button></details>`;
+      </div>`).join("")+`</div><div class="qfoot"><button class="addrow qadd" data-qadd="${esc(k)}">+ Add quote</button><button class="qsave" data-qsave="${esc(k)}" ${QBUSY[k]?"disabled":""}>${QBUSY[k]?"Saving\u2026":"Save Quotes"}</button><span class="qmsg ${QMSG[k]&&QMSG[k].bad?"bad":""}">${QMSG[k]?esc(QMSG[k].t):""}</span></div></details>`;
   }).join("");
   const pr=document.getElementById("qProg"); pr.textContent=`${done} of ${QCATS.length} vendors have 3+ quotes`; pr.className="tag "+(done===QCATS.length?"done":"next");
 }
@@ -645,17 +666,149 @@ function qToBudget(k){
 document.getElementById("qList").addEventListener("input",e=>{
   const f=e.target.dataset.qf; if(!f) return;
   const box=e.target.closest(".quote"), k=box.dataset.qc, i=+box.dataset.qi, q=B.quotes[k][i];
-  q[f]=e.target.value; bsave();
+  q[f]=e.target.value; q._dirty=true; bsave();
   if(f==="price"||f==="tax"){ box.querySelector("[data-qall]").textContent=qFilled(q)?$f(qAll(q)):"\u2014"; if(B.qChosen[k]===i){qToBudget(k);bsave();} }
 });
-document.getElementById("qList").addEventListener("change",e=>{ if(e.target.dataset.qf) qRender(); });
+document.getElementById("qList").addEventListener("change",e=>{ if(!e.target.dataset.qf) return; const k=e.target.closest(".quote").dataset.qc; const el=[...document.querySelectorAll("[data-qsum]")].find(x=>x.dataset.qsum===k); if(el) el.innerHTML=qSum(k); });
 document.getElementById("qList").addEventListener("click",e=>{
+  const sv=e.target.closest("[data-qsave]"); if(sv){ qSave(sv.dataset.qsave); return; }
   const add=e.target.closest("[data-qadd]"); if(add){ B.quotes[add.dataset.qadd].push(blankQ()); bsave(); qRender(); return; }
   const box=e.target.closest(".quote"); if(!box) return;
   const k=box.dataset.qc, i=+box.dataset.qi;
   if(e.target.closest("[data-qchoose]")){ B.qChosen[k]= B.qChosen[k]===i?undefined:i; if(B.qChosen[k]===undefined) delete B.qChosen[k]; qToBudget(k); bsave(); qRender(); }
   else if(e.target.closest("[data-qdel]")){ B.quotes[k].splice(i,1); if(B.qChosen[k]===i){delete B.qChosen[k];qToBudget(k);} else if(B.qChosen[k]>i) B.qChosen[k]--; bsave(); qRender(); }
 });
+
+// ---------- Master quotes file ----------
+// Full quotes (names, contacts) live only in the master file in Ray's own folder. The public repo gets quotes-public.json with names and contacts removed.
+const GK="wp-2027-gh", REPO="raymondchenbjj/rfxt-92kv-yrkk", PUBFILE="quotes-public.json", MFILE="Vendor Quotes Master.json", CFILE="Vendor Quotes Master.csv";
+let GH={}; try{GH=JSON.parse(localStorage.getItem(GK)||"{}")}catch(e){}
+const QMSG={}, QBUSY={};
+let DIR=null, MASTER=null;
+const FSOK=typeof window.showDirectoryPicker==="function";
+const PLACE=/^(Photographer|Videographer|Photo booth) quote \d+$/;
+const qHas=q=>qFilled(q)||String(q.v||"").trim()!=="";
+function qUnsaved(a){ return a.filter(q=>q._dirty&&qHas(q)).length; }
+const qNewId=()=>"q"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const qClean=q=>({id:q.id,v:q.v||"",c:q.c||"",price:q.price===""||q.price==null?"":num(q.price),tax:q.tax===""||q.tax==null?8.625:num(q.tax),inc:q.inc||"",notes:q.notes||""});
+function qConnMsg(t,bad){ const el=document.getElementById("qSheetMsg"); el.textContent=t||""; el.className="qmsg"+(bad?" bad":""); }
+// tiny IndexedDB store for the folder handle
+function idb(mode,fn){ return new Promise((res,rej)=>{ const o=indexedDB.open("wp-2027-files",1); o.onupgradeneeded=()=>o.result.createObjectStore("kv"); o.onerror=()=>rej(o.error); o.onsuccess=()=>{ try{ const t=o.result.transaction("kv",mode), st=t.objectStore("kv"), r=fn(st); t.oncomplete=()=>res(r&&r.result); t.onerror=()=>rej(t.error); }catch(e){ rej(e); } }; }); }
+const idbGet=k=>idb("readonly",st=>st.get(k)).catch(()=>null), idbSet=(k,v)=>idb("readwrite",st=>st.put(v,k)).catch(()=>null), idbDel=k=>idb("readwrite",st=>st.delete(k)).catch(()=>null);
+function qConnUI(){
+  const st=document.getElementById("qConnState");
+  const on=!!DIR; st.textContent=on?"Folder connected":"Folder not connected"; st.className="tag "+(on?"done":"later");
+  document.getElementById("qGh").value=GH.token?"saved":"";
+  document.getElementById("qGhState").textContent=GH.token?"GitHub token saved in this browser.":"No GitHub token yet: saves go to your folder but the public dashboard won't update.";
+  document.getElementById("qPick").textContent=DIR?"Change folder":"Choose Wedding Planning folder";
+  document.getElementById("qFsNote").style.display=FSOK?"none":"";
+}
+function qApply(remote){
+  Object.entries(remote||{}).forEach(([k,list])=>{
+    if(!QCATS.some(c=>c[0]===k)) return;
+    const local=B.quotes[k]||[], chosen=B.qChosen[k]!==undefined?local[B.qChosen[k]]:null;
+    const byId={}; local.forEach(q=>{ if(q.id) byId[q.id]=q; });
+    const ids=new Set(list.map(r=>r.id));
+    const merged=list.map(r=>{ const l=byId[r.id]; return l&&l._dirty?l:Object.assign({},r); });
+    local.forEach(q=>{ if(q.id&&ids.has(q.id)) return; if(q.id&&!q._dirty) return; if(qHas(q)&&!PLACE.test(String(q.v||""))) merged.push(q); });
+    const ci=chosen?merged.findIndex(q=>q===chosen||(chosen.id&&q.id===chosen.id)):-1;
+    if(ci>=0) B.qChosen[k]=ci; else delete B.qChosen[k];
+    B.quotes[k]=merged;
+  });
+}
+function qAfterLoad(){ bsave(); qRender(); QCATS.forEach(([k])=>{ if(B.qChosen[k]!==undefined) qToBudget(k); }); bsave(); }
+const tstamp=()=>new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+async function qReadMaster(){
+  if(!DIR) return null;
+  try{ const fh=await DIR.getFileHandle(MFILE); const t=await (await fh.getFile()).text(); const j=JSON.parse(t); return j&&j.quotes?j:{quotes:{}}; }
+  catch(e){ if(e&&e.name==="NotFoundError") return {quotes:{}}; throw e; }
+}
+async function qWriteFile(name,text){ const fh=await DIR.getFileHandle(name,{create:true}); const w=await fh.createWritable(); await w.write(text); await w.close(); }
+function qCsv(m){
+  const cell=v=>{ const s=String(v==null?"":v); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  const rows=[["Category","Vendor Name","Contact","Price","Tax %","All in","What's Included","Notes","Quote ID"]];
+  QCATS.forEach(([k])=>(m.quotes[k]||[]).forEach(q=>rows.push([k,q.v,q.c,q.price,q.tax,qFilled(q)?Math.round(qAll(q)):"",q.inc,q.notes,q.id])));
+  return rows.map(r=>r.map(cell).join(",")).join("\r\n");
+}
+const QGENERIC=new Set("photo photos photography photographer photographers studio studios film films video videos videography cinema media wedding weddings events event entertainment music band dj djs live design designs flowers floral florals decor official group the and of by co inc llc company productions creative art arts bridal beauty hair makeup limo limousine transportation officiant officiants".split(" "));
+function qPublic(m){
+  const label={Photography:"Photographer",Videography:"Videographer","Photo booth":"Photo booth"};
+  const names=[]; Object.values(m.quotes).forEach(l=>l.forEach(q=>{ const n=String(q.v||"").trim(); if(n.length>2) names.push(n); }));
+  names.sort((a,b)=>b.length-a.length);
+  const reEsc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  const scrub=t=>{ let s=String(t||"");
+    s=s.replace(/https?:\/\/\S+/gi,"[link removed]").replace(/\b\S+@\S+\.\S+\b/g,"[email removed]").replace(/(^|\s)@[A-Za-z0-9_.]{2,}/g,"$1[handle removed]").replace(/\+?\d[\d\s().-]{8,}\d/g,"[phone removed]");
+    names.forEach(n=>{ s=s.replace(new RegExp(reEsc(n),"gi"),"[vendor]"); n.split(/\s+/).map(w=>w.replace(/[^A-Za-z0-9&']/g,"")).filter(w=>w.length>=3&&!QGENERIC.has(w.toLowerCase())).forEach(w=>{ s=s.replace(new RegExp("\\b"+reEsc(w)+"\\b","gi"),"[vendor]"); }); });
+    return s.replace(/(\[vendor\]\s*)+/g,"[vendor] ").trim(); };
+  const out={updated:new Date().toISOString(),quotes:{}};
+  QCATS.forEach(([k])=>{ const l=m.quotes[k]||[]; if(!l.length) return; const order=[], cnt={};
+    l.forEach(q=>{ const n=String(q.v||"").trim().toLowerCase(); if(!order.includes(n)) order.push(n); });
+    out.quotes[k]=l.map(q=>{ const n=String(q.v||"").trim().toLowerCase(), vi=order.indexOf(n)+1, tot=l.filter(x=>String(x.v||"").trim().toLowerCase()===n).length; cnt[n]=(cnt[n]||0)+1;
+      return {id:q.id,v:`${label[k]||k} ${vi}${tot>1?", option "+cnt[n]:""}`,c:"",price:q.price,tax:q.tax,inc:scrub(q.inc),notes:scrub(q.notes)}; }); });
+  return out;
+}
+async function qPublish(m){
+  const t=GH.token; if(!t) return "skipped";
+  const body=JSON.stringify(qPublic(m),null,1), api=`https://api.github.com/repos/${REPO}/contents/${PUBFILE}`;
+  const hd={Authorization:"Bearer "+t,Accept:"application/vnd.github+json"};
+  let sha; const g=await fetch(api+"?ref=main",{headers:hd,cache:"no-store"}); if(g.ok) sha=(await g.json()).sha; else if(g.status!==404) throw new Error("GitHub said "+g.status+" (check the token)");
+  const r=await fetch(api,{method:"PUT",headers:hd,body:JSON.stringify({message:"Update vendor quotes (names and contacts hidden)",content:btoa(unescape(encodeURIComponent(body))),sha,branch:"main"})});
+  if(!r.ok) throw new Error("GitHub said "+r.status+" (check the token has Contents write on this repo)");
+  return "ok";
+}
+async function qLoad(){
+  try{ const r=await fetch(PUBFILE+"?t="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(!DIR){ qApply(j.quotes); qAfterLoad(); } } }catch(e){}
+  if(!DIR) return;
+  try{ MASTER=await qReadMaster(); qApply(MASTER.quotes); qAfterLoad();
+    const n=Object.values(MASTER.quotes).reduce((a,l)=>a+l.length,0);
+    qConnMsg(`Loaded ${n} quote${n===1?"":"s"} from ${MFILE} at ${tstamp()}.`);
+  }catch(e){ qConnMsg("Could not read the master file: "+e.message,true); }
+}
+async function qRestore(){
+  if(!FSOK) return;
+  const h=await idbGet("dir"); if(!h) return;
+  let p="prompt"; try{ p=await h.queryPermission({mode:"readwrite"}); }catch(e){}
+  if(p==="granted"){ DIR=h; qConnUI(); }
+  else { qConnMsg("Tap Choose Wedding Planning folder (or Reconnect) to load your full quotes.",false); document.getElementById("qRe").style.display=""; window._qPending=h; }
+}
+async function qSave(k){
+  if(!DIR){
+    if(!FSOK){ qSaveDownload(k); return; }
+    QMSG[k]={t:"Choose your Wedding Planning folder first (card at the top of this tab).",bad:true}; document.getElementById("qConn").open=true; qRender(); return; }
+  QBUSY[k]=true; QMSG[k]={t:""}; qRender();
+  try{
+    if(await DIR.queryPermission({mode:"readwrite"})!=="granted" && await DIR.requestPermission({mode:"readwrite"})!=="granted") throw new Error("folder permission was not given");
+    const m=await qReadMaster(); const list=m.quotes[k]=m.quotes[k]||[];
+    let added=0, updated=0;
+    B.quotes[k].filter(qHas).forEach(q=>{ if(!q.id) q.id=qNewId(); const i=list.findIndex(x=>x.id===q.id), c=qClean(q);
+      if(i<0){ list.push(c); added++; } else if(JSON.stringify(list[i])!==JSON.stringify(c)){ list[i]=c; updated++; } });
+    m.updated=new Date().toISOString();
+    await qWriteFile(MFILE,JSON.stringify(m,null,1)); await qWriteFile(CFILE,qCsv(m)); MASTER=m;
+    B.quotes[k].forEach(q=>{ delete q._dirty; }); qApply(m.quotes); qToBudget(k);
+    let pub=""; try{ pub=await qPublish(m); }catch(e){ pub="err:"+e.message; }
+    QMSG[k]={t:`Saved ${tstamp()}: ${added} new, ${updated} updated in ${MFILE}. `+(pub==="ok"?"Public dashboard updated (names and contacts hidden; live in about a minute).":pub==="skipped"?"Add a GitHub token to also update the public dashboard.":"Public dashboard not updated: "+pub.slice(4)),bad:pub.startsWith("err")};
+  }catch(err){ QMSG[k]={t:"Not saved: "+err.message,bad:true}; }
+  QBUSY[k]=false; bsave(); qRender();
+}
+function qSaveDownload(k){
+  // Browsers without folder access (Safari, Firefox): download the updated master file instead.
+  const m=MASTER||{quotes:{}}; const list=m.quotes[k]=m.quotes[k]||[];
+  B.quotes[k].filter(qHas).forEach(q=>{ if(!q.id) q.id=qNewId(); const i=list.findIndex(x=>x.id===q.id), c=qClean(q); if(i<0) list.push(c); else list[i]=c; });
+  m.updated=new Date().toISOString(); MASTER=m;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(m,null,1)],{type:"application/json"})); a.download=MFILE; a.click();
+  B.quotes[k].forEach(q=>{ delete q._dirty; });
+  qPublish(m).then(r=>{ QMSG[k]={t:`Downloaded ${MFILE}; replace the one in your Wedding Planning folder. `+(r==="ok"?"Public dashboard updated.":"")}; qRender(); }).catch(e=>{ QMSG[k]={t:"Downloaded the master file. Public dashboard not updated: "+e.message,bad:true}; qRender(); });
+  bsave(); qRender();
+}
+document.getElementById("qPick").onclick=async()=>{
+  if(!FSOK){ document.getElementById("qFile").click(); return; }
+  try{ const h=await window.showDirectoryPicker({id:"wedding-planning",mode:"readwrite"}); DIR=h; await idbSet("dir",h); document.getElementById("qRe").style.display="none"; qConnUI(); qLoad(); }
+  catch(e){ if(e.name!=="AbortError") qConnMsg("Could not open the folder: "+e.message,true); }
+};
+document.getElementById("qRe").onclick=async()=>{ const h=window._qPending; if(!h) return; try{ if(await h.requestPermission({mode:"readwrite"})==="granted"){ DIR=h; document.getElementById("qRe").style.display="none"; qConnUI(); qLoad(); } }catch(e){ qConnMsg(e.message,true); } };
+document.getElementById("qFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ MASTER=JSON.parse(await f.text()); qApply(MASTER.quotes); qAfterLoad(); qConnMsg("Loaded "+f.name+"."); }catch(err){ qConnMsg("That file could not be read: "+err.message,true); } };
+document.getElementById("qGhSave").onclick=()=>{ const v=document.getElementById("qGh").value.trim(); if(v&&v!=="saved"){ GH={token:v}; try{localStorage.setItem(GK,JSON.stringify(GH))}catch(e){} } qConnUI(); qConnMsg(GH.token?"GitHub token saved in this browser.":"Paste a token first.",!GH.token); };
+document.getElementById("qDisc").onclick=async()=>{ DIR=null; MASTER=null; GH={}; try{localStorage.removeItem(GK)}catch(e){} await idbDel("dir"); qConnUI(); qConnMsg("This browser is disconnected. Your master file is untouched."); };
 
 // ---------- Menu selections ----------
 const ST=(name,desc,subs)=>({name,desc,subs:subs||[]});
@@ -880,7 +1033,7 @@ function bInit(){
   document.getElementById("bTotal").value=num(B.total).toLocaleString();
   document.getElementById("vGuests").value=B.guests;
   document.getElementById("vPP").value=B.pp;
-  bRows(); addonRender(); menuRender(); qRender(); document.getElementById("g2In").value=B.gx||""; bCalc();
+  bRows(); addonRender(); menuRender(); qRender(); document.getElementById("g2In").value=B.gx||""; bCalc(); qConnUI(); qRestore().then(qLoad);
 }
 function bCalc(){
   const V=venue();

@@ -1,0 +1,92 @@
+{
+ "updated": "2026-11-01T22:11:35.901Z",
+ "quotes": {
+  "Photography": [
+   {
+    "id": "q0dafb3632a",
+    "v": "Photographer 1",
+    "c": "",
+    "price": 5500,
+    "tax": 8.625,
+    "inc": "Photography:\nUp to 10 hours of unlimited shooting\nMain Photographer & Lighting Assistant\n2nd Photographer\nEngagement shoot (NYC or Long Island)  Includes all HIRES FILES\nCustomized Main Album  with Customized Designing (9.5x13 in Size with 60 Photo's) **See Sample Photos\nPersonal Webpage displaying all images (No Monetary Value)\nDigital Download of all the High-resolution files\nEnlargements:3-5x7's   2-8x10's   1-11x14\nThis Package would be $5500.00+tax",
+    "notes": "Quoted Oct 22, 2026. $5,500 + tax with engagement shoot + 60 photo album. Base package (no engagement, no album) starts at $4,000 + tax. Add ons: engagement shoot, 50 photo album, parent albums 8x10. Sample gallery at this venue on their Pixieset."
+   },
+   {
+    "id": "qf4a0c0b2a9",
+    "v": "Photographer 2, option 1",
+    "c": "",
+    "price": 6000,
+    "tax": 8.625,
+    "inc": "8 hour coverage\nSecond shooter\nTimeline assistance\nMinimum 600 high resolution images\nSneak peaks within 72 hours\nFull gallery delivered 8-10 weeks\nafter",
+    "notes": "deluxe package - reference style for photos; Instagram [handle removed]"
+   },
+   {
+    "id": "q6168ae786a",
+    "v": "Photographer 2, option 2",
+    "c": "",
+    "price": 7200,
+    "tax": 8.625,
+    "inc": "10 hour coverage\nSecond shooter\nTimeline assistance\nMinimum 700 high resolution images\nSneak peaks within 72 hours\nFull gallery delivered 8-10 weeks\nafter",
+    "notes": "platinum package  - reference style for photos"
+   },
+   {
+    "id": "q5a75149db7",
+    "v": "Photographer 3",
+    "c": "",
+    "price": 8000,
+    "tax": 8.625,
+    "inc": "standard package",
+    "notes": "reference style for photos, too expensive"
+   },
+   {
+    "id": "qf15c0053ae",
+    "v": "Photographer 4",
+    "c": "",
+    "price": 13500,
+    "tax": 8.625,
+    "inc": "[link removed]\n10 hr coverage\n2 photgrapher\n1 videographer\nonline viewing/ ordering\ngallery with high resolution\nimages for printing\n5-7 minute wedding film\na la carte printed album options",
+    "notes": "options with video only, too expensive"
+   },
+   {
+    "id": "q5fe404d181",
+    "v": "Photographer 5",
+    "c": "",
+    "price": 5195,
+    "tax": 8.625,
+    "inc": "8 hour coverage\n2 photographers\na la carte:\n$1000 album 50 images 10x10 linen\nFree $200 worth pictures, portraits and frames with the album\n$395 engagement shoot within nassau county",
+    "notes": ""
+   },
+   {
+    "id": "q2dddc5d40f",
+    "v": "Photographer 6",
+    "c": "",
+    "price": 7000,
+    "tax": 8.625,
+    "inc": "10 hour coverage experience\nWedding day coverage with myself as lead photographer\nA second photographer for expanded perspective of the day\nSneak peeks delivered within 48 hours\nA fully edited, high resolution gallery delivered in 8 weeks\nPre-wedding consult + timeline planning assistance",
+    "notes": ""
+   }
+  ],
+  "Videography": [
+   {
+    "id": "qd3ebc9a6a7",
+    "v": "Videographer 1",
+    "c": "",
+    "price": 3200,
+    "tax": 8.625,
+    "inc": "Up to 10 hrs coverage\nMain videographer + shooting assistant\n5 to 7 min trailer set to your songs\nFull edit movie style video, approx 1 to 1.5 hrs, live audio + music\nOpening highlight + love story recap ending",
+    "notes": "Quoted Oct 22, 2026. $3,200 + tax. Add ons: drone (2 hr slot); upgrade assistant to a 2nd main videographer for the groom's getting ready location. Same company as photo quote; ask about a bundle discount"
+   }
+  ],
+  "Photo booth": [
+   {
+    "id": "qac6bc467df",
+    "v": "Photo booth 1",
+    "c": "",
+    "price": 1200,
+    "tax": 8.625,
+    "inc": "4 hr reception\nProps\nUnlimited strips for guests\nExtra copy of strips for a scrapbook\nUSB of all digital files the same night",
+    "notes": "Quoted Oct 22, 2026 alongside the photo package. $1,200 + tax"
+   }
+  ]
+ }
+}
