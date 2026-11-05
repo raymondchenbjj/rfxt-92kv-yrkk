@@ -111,6 +111,8 @@ a{color:var(--accent)}
 .qcat{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:0 0 14px;overflow:hidden}
 .qcat>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;flex-wrap:wrap}
 .qcat>summary::-webkit-details-marker{display:none}
+.qok{display:inline-grid;place-content:center;width:22px;height:22px;border-radius:50%;background:var(--sage);color:var(--card);font:600 13px/1 Inter,system-ui,sans-serif;margin-right:8px;vertical-align:3px}
+.qcat.fin>summary h3{color:var(--sage)}
 .qcat>summary h3{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;margin:0}
 .qcat>summary .qs{font-size:12.5px;color:var(--muted)}
 .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 18px 16px}
@@ -667,6 +669,8 @@ function qInit(){
 }
 const qAll=q=>num(q.price)*(1+num(q.tax)/100);
 const qFilled=q=>num(q.price)>0;
+const QOPEN={};
+document.addEventListener("click",e=>{ const sm=e.target.closest(".qcat>summary"); if(sm){ const d=sm.parentElement; QOPEN[d.dataset.qcat]=!d.open; } });
 function qSum(k){
   const a=B.quotes[k], n=a.filter(qFilled).length, ch=B.qChosen[k], prices=a.filter(qFilled).map(qAll), lo=prices.length?Math.min(...prices):0;
   return `${n} of 3 quotes${ch!==undefined&&a[ch]?` &middot; chosen: ${esc(a[ch].v||"Quote "+(ch+1))}`:""}${prices.length>1?` &middot; lowest ${$f(lo)}`:""}${qUnsaved(a)?` &middot; <span class="unsaved">${qUnsaved(a)} unsaved</span>`:""}`;
@@ -678,7 +682,8 @@ function qRender(){
     const a=B.quotes[k], n=a.filter(qFilled).length, ch=B.qChosen[k];
     if(n>=3) done++;
     const prices=a.filter(qFilled).map(qAll), lo=prices.length?Math.min(...prices):0;
-    return `<details class="qcat" ${n||k==="Photography"?"open":""}><summary><h3>${k}</h3><span class="qs" data-qsum="${esc(k)}">${qSum(k)}</span></summary>
+    const fin=n>=3||(ch!==undefined&&a[ch]&&qFilled(a[ch])), op=QOPEN[k]!==undefined?QOPEN[k]:!fin;
+    return `<details class="qcat${fin?" fin":""}" data-qcat="${esc(k)}" ${op?"open":""}><summary><h3>${fin?'<span class="qok" title="Quotes done">&#10003;</span>':""}${k}</h3><span class="qs" data-qsum="${esc(k)}">${qSum(k)}</span></summary>
       <div class="qgrid">`+a.map((q,i)=>`<div class="quote ${ch===i?"chosen":""}" data-qc="${esc(k)}" data-qi="${i}">
         <button class="x qx" data-qdel title="Remove from this view (a saved quote stays in the master file)">&times;</button>
         <label>Vendor<input data-qf="v" value="${esc(q.v)}" placeholder="Quote ${i+1}"></label>
