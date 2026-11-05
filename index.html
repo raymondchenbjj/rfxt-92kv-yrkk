@@ -198,6 +198,11 @@ a{color:var(--accent)}
   section.panel{display:block!important}
   .phase,.card{break-inside:avoid}
 }
+.gm ol{margin:6px 0 4px;padding-left:22px}
+.gm li{padding:4px 0;font-size:14.5px}
+.gm h4{margin:16px 0 2px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.gm .gmact{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.gm .gmact button{border:1px solid var(--sage);background:none;color:var(--sage);border-radius:99px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -223,6 +228,7 @@ a{color:var(--accent)}
   <button data-t="guests">Guest Count</button>
   <button data-t="forms">Venue Forms</button>
   <button data-t="contacts">Contacts</button>
+  <button data-t="party">Groomsmen</button>
   <button data-t="tips">Gratuities</button>
 </nav>
 
@@ -437,6 +443,17 @@ a{color:var(--accent)}
         <tr><td>Transportation</td><td>&nbsp;</td></tr>
       </table>
     </div>
+  </div>
+</section>
+
+<section class="panel" id="party">
+  <div class="card gm" id="gmCard">
+    <h3>Groomsmen Task List</h3>
+    <p class="note" style="margin:0">Groomsmen wear black tuxedos; the groom wears white. Send this after the groomsmen dinner on Nov 10.</p>
+    <h4>Before the wedding</h4><ol><li>Make the tailor trip in March 2027 to get measured and fitted together. If you can't make it, get measured at any branch of the same shop and send your sizes by early April.</li><li>Help plan the bachelor party (the best man leads this).</li><li>Come to the rehearsal so you know the processional order and where to stand.</li><li>Final fitting with the full outfit and shoes about 2 weeks before (end of May).</li><li>Pick up your rental the week of the wedding and try it on right away so there's time for a size swap.</li></ol>
+    <h4>On the wedding day (Sunday, June 13, 2027)</h4><ol><li>Be in the groom's suite on time to get ready together; photos start before guests arrive at 4pm.</li><li>Usher: greet guests, hand out programs and seat people in the garden. Walk the grandparents and mothers to their seats.</li><li>Walk in the processional and recessional with the bridesmaids.</li><li>Best man: hold the rings and give a short toast.</li><li>Join the 敬酒 table round: carry the bottle, refill glasses, keep the pace moving table to table, and drink on the groom's behalf when relatives push.</li><li>Round people up for group photos and get guests onto the dance floor.</li><li>Help with small jobs: watch the locked box for card envelopes and look after any guest who has had too much.</li></ol>
+    <h4>After the wedding</h4><ol><li>Return your rental on time. One groomsman collects all the rentals and returns them together so nobody pays late fees.</li></ol>
+    <div class="gmact"><button id="gmCopy">Copy as text message</button><span class="note" id="gmMsg"></span></div>
   </div>
 </section>
 
@@ -1123,6 +1140,13 @@ document.getElementById("budget").addEventListener("click",e=>{
 });
 document.getElementById("addRow").onclick=()=>{B.rows.push({item:"New item",est:0,act:"",paid:"",note:""});bsave();bRows();bCalc();};
 bInit();
+document.getElementById("gmCopy").onclick=async()=>{
+  const c=document.getElementById("gmCard"); let t="Groomsmen task list\n";
+  c.querySelectorAll("h4").forEach(h=>{ t+="\n"+h.textContent+"\n"; let n=1; h.nextElementSibling.querySelectorAll("li").forEach(li=>{ t+=(n++)+". "+li.textContent+"\n"; }); });
+  const m=document.getElementById("gmMsg");
+  try{ await navigator.clipboard.writeText(t); m.textContent="Copied. Paste it into your group chat."; }
+  catch(e){ const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select(); let ok=false; try{ok=document.execCommand("copy")}catch(_){} a.remove(); m.textContent=ok?"Copied. Paste it into your group chat.":"Copy didn't work in this browser; select the list and copy it by hand."; }
+};
 </script>
 </body>
 </html>
