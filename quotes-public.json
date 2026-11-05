@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-05T01:59:07.678Z",
+ "updated": "2026-11-05T02:07:38.492Z",
  "quotes": {
   "Photography": [
    {
@@ -108,6 +108,24 @@
     "tax": 8.625,
     "inc": "1 live string musician for cocktail hour\n1 live musician for the ceremony\nMic, mic stand and speaker included",
     "notes": "Preferred vendor at the venue (on The Mansion's recommended list). Just one string player"
+   },
+   {
+    "id": "q62c9282ed8",
+    "v": "Live strings 2",
+    "c": "",
+    "price": 2450,
+    "tax": 8.625,
+    "inc": "Ceremony and a 60 minute cocktail hour\nQuartet: $2,450 ($550 deposit)\nTrio option: $1,875 ($450 deposit)",
+    "notes": "Price shown is the quartet. Song list: [link removed] (copy saved in Vendors folder)"
+   },
+   {
+    "id": "q1e2f49fb94",
+    "v": "Live strings 3",
+    "c": "",
+    "price": 3460,
+    "tax": 8.625,
+    "inc": "Ceremony and cocktail hour\nQuartet (2 violins, viola and cello)",
+    "notes": ""
    }
   ]
  }
