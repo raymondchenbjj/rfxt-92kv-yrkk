@@ -377,7 +377,7 @@ a{color:var(--accent)}
   <details class="card" id="qConn"><summary><h3 style="display:inline">Saving quotes</h3> <span class="tag later" id="qConnState">Folder not connected</span></summary>
     <p class="note">Save Quotes writes every quote, with names and contacts, to the master file (Vendor Quotes Master.json, plus a .csv copy) in your Wedding Planning folder, then updates this public dashboard with names and contacts hidden. Your folder and token stay in this browser only. Setup steps are in the Notes folder.</p>
     <p class="note"><b>1.</b> <button class="addrow" id="qPick">Choose Wedding Planning folder</button> <button class="addrow" id="qRe" style="display:none">Reconnect folder</button> <input type="file" id="qFile" accept=".json" style="display:none"></p>
-    <p class="note" id="qFsNote" style="display:none">This browser can't write to folders, so Save Quotes downloads the master file instead. Use Chrome or Edge for one click saving.</p>
+    <p class="note" id="qFsNote" style="display:none">This browser can't write to folders, so Save Quotes downloads <b>Vendor Quotes Master.json</b> instead. Move it into your Wedding Planning folder, replacing the old one. For one click saving, open the dashboard in Chrome or Edge.</p>
     <div class="vgrid" style="grid-template-columns:2fr 1fr"><label><b>2.</b> GitHub token (to update the public dashboard)<input id="qGh" type="password" autocomplete="off" placeholder="github_pat_..."></label><label>&nbsp;<button class="addrow" id="qGhSave" style="margin-top:3px">Save token</button></label></div>
     <p class="note" id="qGhState"></p>
     <button class="addrow" id="qDisc">Disconnect this browser</button>
@@ -703,10 +703,10 @@ function idb(mode,fn){ return new Promise((res,rej)=>{ const o=indexedDB.open("w
 const idbGet=k=>idb("readonly",st=>st.get(k)).catch(()=>null), idbSet=(k,v)=>idb("readwrite",st=>st.put(v,k)).catch(()=>null), idbDel=k=>idb("readwrite",st=>st.delete(k)).catch(()=>null);
 function qConnUI(){
   const st=document.getElementById("qConnState");
-  const on=!!DIR; st.textContent=on?"Folder connected":"Folder not connected"; st.className="tag "+(on?"done":"later");
+  const on=!!DIR||(!FSOK&&!!MASTER); st.textContent=FSOK?(DIR?"Folder connected":"Folder not connected"):(MASTER?"Master file loaded":"Master file not loaded"); st.className="tag "+(on?"done":"later");
   document.getElementById("qGh").value=GH.token?"saved":"";
   document.getElementById("qGhState").textContent=GH.token?"GitHub token saved in this browser.":"No GitHub token yet: saves go to your folder but the public dashboard won't update.";
-  document.getElementById("qPick").textContent=DIR?"Change folder":"Choose Wedding Planning folder";
+  document.getElementById("qPick").textContent=FSOK?(DIR?"Change folder":"Choose Wedding Planning folder"):"Load Vendor Quotes Master.json";
   document.getElementById("qFsNote").style.display=FSOK?"none":"";
 }
 function qApply(remote){
@@ -796,12 +796,22 @@ async function qSave(k){
   }catch(err){ QMSG[k]={t:"Not saved: "+err.message,bad:true}; }
   QBUSY[k]=false; bsave(); qRender();
 }
+async function qDownload(name,text){
+  if(typeof window.showSaveFilePicker==="function"){
+    try{ const h=await window.showSaveFilePicker({suggestedName:name,id:"wedding-planning",types:[{description:"Vendor quotes",accept:{"application/json":[".json"]}}]}); const w=await h.createWritable(); await w.write(text); await w.close(); return; }
+    catch(e){ if(e&&e.name==="AbortError") return; }
+  }
+  const f=new File([text],name,{type:"application/octet-stream"}), url=URL.createObjectURL(f), a=document.createElement("a");
+  a.href=url; a.download=name; a.rel="noopener"; a.style.display="none"; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },5000);
+}
 function qSaveDownload(k){
   // Browsers without folder access (Safari, Firefox): download the updated master file instead.
-  const m=MASTER||{quotes:{}}; const list=m.quotes[k]=m.quotes[k]||[];
+  if(!MASTER){ QMSG[k]={t:"Load your current Vendor Quotes Master.json first (Saving quotes card at the top of this tab), then tap Save Quotes again.",bad:true}; document.getElementById("qConn").open=true; qRender(); return; }
+  const m=MASTER; const list=m.quotes[k]=m.quotes[k]||[];
   B.quotes[k].filter(qHas).forEach(q=>{ if(!q.id) q.id=qNewId(); const i=list.findIndex(x=>x.id===q.id), c=qClean(q); if(i<0) list.push(c); else list[i]=c; });
   m.updated=new Date().toISOString(); MASTER=m;
-  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(m,null,1)],{type:"application/json"})); a.download=MFILE; a.click();
+  qDownload(MFILE,JSON.stringify(m,null,1));
   B.quotes[k].forEach(q=>{ delete q._dirty; });
   qPublish(m).then(r=>{ QMSG[k]={t:`Downloaded ${MFILE}; replace the one in your Wedding Planning folder. `+(r==="ok"?"Public dashboard updated.":"")}; qRender(); }).catch(e=>{ QMSG[k]={t:"Downloaded the master file. Public dashboard not updated: "+e.message,bad:true}; qRender(); });
   bsave(); qRender();
@@ -812,7 +822,7 @@ document.getElementById("qPick").onclick=async()=>{
   catch(e){ if(e.name!=="AbortError") qConnMsg("Could not open the folder: "+e.message,true); }
 };
 document.getElementById("qRe").onclick=async()=>{ const h=window._qPending; if(!h) return; try{ if(await h.requestPermission({mode:"readwrite"})==="granted"){ DIR=h; document.getElementById("qRe").style.display="none"; qConnUI(); qLoad(); } }catch(e){ qConnMsg(e.message,true); } };
-document.getElementById("qFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ MASTER=JSON.parse(await f.text()); qApply(MASTER.quotes); qAfterLoad(); qConnMsg("Loaded "+f.name+"."); }catch(err){ qConnMsg("That file could not be read: "+err.message,true); } };
+document.getElementById("qFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ const j=JSON.parse(await f.text()); if(!j||!j.quotes) throw new Error("this is not a quotes master file"); MASTER=j; qApply(MASTER.quotes); qAfterLoad(); qConnUI(); qConnMsg("Loaded "+f.name+". Save Quotes will download the updated file."); }catch(err){ qConnMsg("That file could not be read: "+err.message,true); } };
 document.getElementById("qGhSave").onclick=()=>{ const v=document.getElementById("qGh").value.trim(); if(v&&v!=="saved"){ GH={token:v}; try{localStorage.setItem(GK,JSON.stringify(GH))}catch(e){} } qConnUI(); qConnMsg(GH.token?"GitHub token saved in this browser.":"Paste a token first.",!GH.token); };
 document.getElementById("qDisc").onclick=async()=>{ DIR=null; MASTER=null; GH={}; try{localStorage.removeItem(GK)}catch(e){} await idbDel("dir"); qConnUI(); qConnMsg("This browser is disconnected. Your master file is untouched."); };
 
