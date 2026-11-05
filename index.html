@@ -297,7 +297,7 @@ a{color:var(--accent)}
       <li>Vendor meals: 50% of adult rate (~$92.63 each); kids are also 50%</li>
       <li>Additional bartender or bar station: $300++</li>
       <li>Hors d'oeuvre, station &amp; dessert enhancements (priced per person)</li>
-      <li>Band green room or food, dedicated power circuit if needed</li>
+      <li>Dedicated power circuit for the DJ if needed</li>
     </ul>
     <p class="note" style="margin-top:8px">Not using: outdoor tent, outdoor pool, guest hotel rooms. After party not planned.</p>
   </div>
@@ -429,9 +429,9 @@ a{color:var(--accent)}
         <tr><th>Role</th><th>Vendor</th></tr>
         <tr><td>Venue</td><td>Booked &#10003;</td></tr>
         <tr><td>Day of coordinator</td><td>Included with venue</td></tr>
-        <tr><td>Photo / Video</td><td>&nbsp;</td></tr>
+        <tr><td>Photographer</td><td>&nbsp;</td></tr>
         <tr><td>Florist / Decor</td><td>&nbsp;</td></tr>
-        <tr><td>Band / DJ / MC</td><td>&nbsp;</td></tr>
+        <tr><td>DJ / MC</td><td>&nbsp;</td></tr>
         <tr><td>Officiant</td><td>&nbsp;</td></tr>
         <tr><td>Hair &amp; Makeup</td><td>&nbsp;</td></tr>
         <tr><td>Transportation</td><td>&nbsp;</td></tr>
@@ -469,6 +469,22 @@ a{color:var(--accent)}
 const WED = new Date(2027,5,13);
 // phases: [title, monthsBefore or date label, items]
 const phases = [
+ {id:"quotes", title:"Priority 1: Vendor Quotes", when:"Start now &middot; quotes in by mid Nov 2026, then connect booked vendors to the venue planners", due:new Date(2026,10,15), items:[
+  ["Get at least 3 quotes for every vendor","Track them in the Vendor Quotes tab. Start with the venue's recommended vendors list",""],
+  ["Photographer quotes","Several quotes in. Photo only: no videographer needed",""],
+  ["DJ quotes","1 of 3 in: the venue's preferred DJ with a Mandarin MC. No band",""],
+  ["Bilingual MC and mashup singer quotes","Ask whether the DJ's Mandarin MC can cover the bilingual MC role",""],
+  ["Live strings quotes","For the ceremony and cocktail hour",""],
+  ["Florist and decor quotes","Venue provides no decor: centerpieces, ceremony arch, bouquets",""],
+  ["Hair and makeup quotes","Include the trial in each quote",""],
+  ["Officiant quotes","",""],
+  ["Transportation quotes","",""],
+  ["Photo booth quotes","",""],
+  ["Quotes for the rest: invitations, rentals, favors, rehearsal dinner, wedding bands","Lower priority; these book closer to the date",""],
+  ["Choose a vendor in each category and sign contracts","Tap Choose on the Vendor Quotes tab to move the price into the Budget",""],
+  ["Connect booked vendors to the venue planners","Send each vendor's details through the Vendor Contact Collection Form and the portal's Required vendor information task; cc the sales manager on every email","Portal"],
+  ["Send the DJ contract to the venue","Needed for technical requirements (power, setup, load in)","Contract"]
+ ]},
  {id:"now", title:"Right Now", when:"This week", due:new Date(2026,9,27), items:[
   ["Schedule intro call with the venue coordinator","Done: welcome call held Oct 28, 2026","Email"],
   ["Pay venue deposit 1: $10,482.50","Paid at signing, Oct 2026","Contract"],
@@ -493,12 +509,8 @@ const phases = [
   ["Schedule your food tasting","Form. Tasting about 4 months out (from mid Feb 2027)","Portal"]
  ]},
  {id:"catch", title:"Catch Up", when:"12 to 8 month items &middot; by end of Nov 2026", due:new Date(2026,10,30), items:[
-  ["Get at least 3 quotes for every vendor","Track them in the Vendor Quotes tab",""],
-  ["Hire photographer, videographer, content creator","Top vendors book a year out, prioritize this. First photo quote is in",""],
   ["Make the wedding guest list","Both sides drafted: about 143 people (family friends estimated at 20), 6 entries waitlisted. Add A/B/C tiers. Up to 160 adds no food cost",""],
   ["Finalize guest invitation list","",""],
-  ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
-  ["Hire florist and/or event decorator","",""],
   ["Decide if you still want an outside coordinator","Contract includes planning services and a day of coordinator",""],
   ["Send out save the date cards","Done: sent through Zola, Nov 2026",""],
   ["Choose the bridal party","",""],
@@ -524,7 +536,7 @@ const phases = [
  {m:4, items:[["Hair and makeup trial","",""],["Buy wedding bands","",""],["Purchase ceremonial items and flat lays","",""],["Schedule tasting at the venue","",""]]},
  {m:3, items:[["Collect attendants' measurements for rentals","Most rental shops want sizes 6 to 8 weeks out",""],["Pay venue deposit 3: $10,482.50","Due Mar 13, 2027","Contract"],["Set dates for bridal shower and bachelor/bachelorette","",""],["Order wedding favors","",""],["Write vows and select readings","",""],["Send out invitations","",""],["Schedule centerpiece sample","",""]]},
  {m:2, items:[["Wedding dress fitting","",""],["Qipao fitting","",""],["Day of details: menu design, escort display, signage","",""]]},
- {m:1, items:[["Get the marriage license","No earlier than Apr 14: a NY license is valid 60 days, with a 24 hour wait before the ceremony",""],["Confirm rehearsal date and time with the venue","",""],["Send band/DJ contract to the venue","Needed for technical requirements","Contract"],["Get vendor regulations signed by every vendor","Must be on file 10 days before (by Jun 3)","Contract"],["Assemble gift bags","",""],["Create seating chart","",""],["Venue final walk through","",""],["Collect RSVPs and call non responders","",""],["Choose menu selections","",""],["Practice vows out loud","",""],["Schedule beauty appointments","",""],["Pay vendors in full","",""]]},
+ {m:1, items:[["Get the marriage license","No earlier than Apr 14: a NY license is valid 60 days, with a 24 hour wait before the ceremony",""],["Confirm rehearsal date and time with the venue","",""],["Get vendor regulations signed by every vendor","Must be on file 10 days before (by Jun 3)","Contract"],["Assemble gift bags","",""],["Create seating chart","",""],["Venue final walk through","",""],["Collect RSVPs and call non responders","",""],["Choose menu selections","",""],["Practice vows out loud","",""],["Schedule beauty appointments","",""],["Pay vendors in full","",""]]},
  {id:"w2", title:"2 Weeks Before", due:new Date(2027,4,30), items:[["Pay venue final balance","Due May 30, 2027 by cash, bank check or wire","Contract"],["Confirm final headcount and floorplan","Guarantee is 160; use any unused credit on vendor meals or enhancements",""],["Review music playlist","",""],["Final dress fitting","",""],["Prepare tip envelopes for vendors and venue staff","See Gratuities tab",""]]},
  {id:"wk", title:"Wedding Week", due:new Date(2027,5,8), items:[["Pick up and try on all rentals","Leave time for size swaps",""],["Deliver gift bags to the venue","No earlier than Jun 8 (5 days before)","Contract"],["Bring a locked box for card envelopes","Name a trusted family member to handle it","Contract"]]},
  {id:"d1", title:"Day Before", due:new Date(2027,5,12), items:[["Eat a healthy meal and drink water","",""],["Organize gown, qipao and accessories","",""],["Get a good night's sleep","",""]]},
@@ -601,8 +613,8 @@ document.getElementById("reset").onclick=()=>{state={};save();render();};
 render();
 
 // ---------- Guest count ----------
-const G1=[["Family", 41, 23], ["Friends (Flushing)", 18, 13], ["Friends (BJJ)", 3, 3], ["Friends (College)", 19, 16], ["Friends (HS)", 12, 10]];
-const G2=[["Family", 5, 3], ["Family friends (estimate)", 20, 1], ["Friends (College)", 22, 19], ["Friends (HS)", 3, 2]];
+const G1=[["Family", 41, 22], ["Friends (Flushing)", 18, 13], ["Friends (BJJ)", 3, 3], ["Friends (College)", 19, 16], ["Friends (HS)", 12, 10]];
+const G2=[["Family", 5, 2], ["Family friends (estimate)", 20, 1], ["Friends (College)", 22, 15], ["Friends (HS)", 3, 2]];
 const gRows=G=>G.map(r=>`<tr><td>${r[0]}</td><td style="text-align:right">${r[2]}</td><td style="text-align:right">${r[1]}</td></tr>`).join("")+`<tr><td><b>Total</b></td><td style="text-align:right"><b>${G.reduce((a,r)=>a+r[2],0)}</b></td><td style="text-align:right"><b>${G.reduce((a,r)=>a+r[1],0)}</b></td></tr>`;
 const gSum=G=>G.reduce((a,r)=>a+r[1],0);
 function gCalc(){
@@ -626,11 +638,13 @@ document.getElementById("g2In").addEventListener("input",e=>{B.gx=e.target.value
 document.getElementById("gUse").onclick=()=>{B.guests=Math.ceil(gSum(G1)+gSum(G2)+num(B.gx||0));document.getElementById("vGuests").value=B.guests;bsave();menuRender();bCalc();document.getElementById("gUse").textContent="Done: Budget now uses "+B.guests+" guests";};
 
 // ---------- Vendor quotes ----------
-const QCATS=[["Photography","Photographer"],["Videography","Videographer / content creator"],["Photo booth","Photo booth"],["Florals & decor","Florals & decor"],["Band or DJ","Band or DJ"],["Live strings","Live strings (ceremony & cocktail)"],["Bilingual MC / singer","Bilingual MC / mashup singer"],["Officiant","Officiant"],["Hair & makeup","Hair & makeup (incl. trial)"],["Transportation","Transportation"],["Invitations & stationery","Save the dates & invitations"],["Tux & dress rentals","Groomsmen & bridesmaid rentals"],["Favors","Favors & gift bags"],["Rehearsal dinner","Rehearsal dinner"],["Wedding bands","Wedding bands"]];
+const QCATS=[["Photography","Photographer"],["Photo booth","Photo booth"],["Florals & decor","Florals & decor"],["DJ","DJ"],["Live strings","Live strings (ceremony & cocktail)"],["Bilingual MC / singer","Bilingual MC / mashup singer"],["Officiant","Officiant"],["Hair & makeup","Hair & makeup (incl. trial)"],["Transportation","Transportation"],["Invitations & stationery","Save the dates & invitations"],["Tux & dress rentals","Groomsmen & bridesmaid rentals"],["Favors","Favors & gift bags"],["Rehearsal dinner","Rehearsal dinner"],["Wedding bands","Wedding bands"]];
 const QPRE={"Photography": [{"v": "Photographer quote 1", "c": "", "price": 5500, "tax": 8.625, "inc": "Up to 10 hrs unlimited shooting\nMain photographer + lighting assistant\n2nd photographer\nEngagement shoot (NYC or LI), all hi res files\nCustom album 9.5x13, 60 photos\nPersonal webpage of all images\nDigital download of all hi res files\nPrints: 3 5x7, 2 8x10, 1 11x14", "notes": "Quoted Oct 22, 2026. $5,500 + tax with engagement shoot + 60 photo album. Base package (no engagement, no album) starts at $4,000 + tax. Add ons: engagement shoot, 50 photo album, parent albums 8x10. Sample gallery at this venue on their Pixieset."}], "Photo booth": [{"v": "Photo booth quote 1", "c": "", "price": 1200, "tax": 8.625, "inc": "4 hr reception\nProps\nUnlimited strips for guests\nExtra copy of strips for a scrapbook\nUSB of all digital files the same night", "notes": "Quoted Oct 22, 2026 alongside the photo package. $1,200 + tax"}], "Videography": [{"v": "Videographer quote 1", "c": "", "price": 3200, "tax": 8.625, "inc": "Up to 10 hrs coverage\nMain videographer + shooting assistant\n5 to 7 min trailer set to your songs\nFull edit movie style video, approx 1 to 1.5 hrs, live audio + music\nOpening highlight + love story recap ending", "notes": "Quoted Oct 22, 2026. $3,200 + tax. Add ons: drone (2 hr slot); upgrade assistant to a 2nd main videographer for the groom's getting ready location. Same company as photo quote; ask about a bundle discount"}]};
 const blankQ=()=>({v:"",c:"",price:"",tax:8.625,inc:"",notes:""});
+function qNorm(o){ if(o&&o["Band or DJ"]){ o["DJ"]=(o["DJ"]||[]).concat(o["Band or DJ"]); delete o["Band or DJ"]; } return o; }
 function qInit(){
   B.quotes=B.quotes||{}; B.qChosen=B.qChosen||{};
+  if(!B._dj){ qNorm(B.quotes); if(B.qChosen["Band or DJ"]!==undefined){ B.qChosen["DJ"]=B.qChosen["Band or DJ"]; delete B.qChosen["Band or DJ"]; } delete B.quotes.Videography; delete B.qChosen.Videography; B._dj=true; }
   if(!B._q1){ B._q2=true; Object.entries(QPRE).forEach(([k,arr])=>{B.quotes[k]=(B.quotes[k]||[]).filter(q=>q.v||q.price);B.quotes[k]=arr.concat(B.quotes[k]);}); B._q1=true; }
   if(!B._q2){ ["Videography","Photography"].forEach(k=>{ if(k==="Videography"){ B.quotes[k]=(B.quotes[k]||[]).filter(q=>q.v||q.price); B.quotes[k]=QPRE[k].concat(B.quotes[k]); } else if(B.quotes[k]&&B.quotes[k][0]&&num(B.quotes[k][0].price)===5500){ B.quotes[k][0].notes=QPRE[k][0].notes; } }); B._q2=true; }
   QCATS.forEach(([k])=>{ const a=B.quotes[k]=B.quotes[k]||[]; while(a.length<3) a.push(blankQ()); });
@@ -710,6 +724,7 @@ function qConnUI(){
   document.getElementById("qFsNote").style.display=FSOK?"none":"";
 }
 function qApply(remote){
+  qNorm(remote);
   Object.entries(remote||{}).forEach(([k,list])=>{
     if(!QCATS.some(c=>c[0]===k)) return;
     const local=B.quotes[k]||[], chosen=B.qChosen[k]!==undefined?local[B.qChosen[k]]:null;
@@ -726,7 +741,7 @@ function qAfterLoad(){ bsave(); qRender(); QCATS.forEach(([k])=>{ if(B.qChosen[k
 const tstamp=()=>new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
 async function qReadMaster(){
   if(!DIR) return null;
-  try{ const fh=await DIR.getFileHandle(MFILE); const t=await (await fh.getFile()).text(); const j=JSON.parse(t); return j&&j.quotes?j:{quotes:{}}; }
+  try{ const fh=await DIR.getFileHandle(MFILE); const t=await (await fh.getFile()).text(); const j=JSON.parse(t); if(j&&j.quotes){ qNorm(j.quotes); return j; } return {quotes:{}}; }
   catch(e){ if(e&&e.name==="NotFoundError") return {quotes:{}}; throw e; }
 }
 async function qWriteFile(name,text){ const fh=await DIR.getFileHandle(name,{create:true}); const w=await fh.createWritable(); await w.write(text); await w.close(); }
@@ -982,9 +997,9 @@ const PAY=[
 ];
 const defaultRows=[
  ["Outside month of coordinator (optional)",0,"Venue already includes planning + day of coordinator"],
- ["Photographer",5500,""],["Videographer / content creator",4000,""],
+ ["Photographer",5500,"Photo only; no videographer"],
  ["Florals & decor",8000,"Venue provides no decor; centerpieces, ceremony arch, bouquets"],
- ["Band or DJ",4500,"Send contract to venue"],["Bilingual MC / mashup singer",2000,""],
+ ["DJ",4500,"DJ and MC, no band. Send contract to venue"],["Bilingual MC / mashup singer",2000,""],
  ["Officiant",600,""],["Marriage license",35,"NY clerk fee"],
  ["Wedding dress alterations",600,"Dress already purchased"],["Qipao for dinner (if needed)",800,""],["Groom tuxedo (white)",1200,"Ivory/white dinner jacket, black tux trousers"],["Groomsmen & bridesmaid rentals",0,"Black tuxedos + floor length dresses; usually paid by each attendant"],
  ["Hair & makeup (incl. trial)",1500,""],["Wedding bands",3000,""],
@@ -1014,6 +1029,7 @@ B.rows.forEach(r=>{if(r.note==="Send contract to venue; Sunday 8 PM sound limit"
  if(r.item==="Groom tuxedo"){r.item="Groom tuxedo (white)";if(!r.note)r.note="Ivory/white dinner jacket, black tux trousers";}
  if(r.item==="Groomsmen & bridesmaid rentals"&&r.note==="Usually paid by each attendant; enter if you cover it")r.note="Black tuxedos + floor length dresses; usually paid by each attendant";});
 if(!B.rows.some(r=>r.item.startsWith("Groomsmen & bridesmaid"))){const i=B.rows.findIndex(r=>r.item.startsWith("Groom tuxedo"));B.rows.splice(i+1,0,{item:"Groomsmen & bridesmaid rentals",est:0,act:"",paid:"",note:"Black tuxedos + floor length dresses; usually paid by each attendant"});}
+if(!B._nov4){ B.rows=B.rows.filter(r=>r.item!=="Videographer / content creator"); B.rows.forEach(r=>{ if(r.item==="Band or DJ"){ r.item="DJ"; r.note="DJ and MC, no band. Send contract to venue"+(r.note&&r.note.indexOf("Vendor Quotes")>=0?"; "+r.note:""); } if(r.item==="Photographer"&&!r.note) r.note="Photo only; no videographer"; }); B._nov4=true; }
 B.min=160; B.up=0;
 const bsave=()=>{try{localStorage.setItem(BK,JSON.stringify(B))}catch(e){}};
 bsave();
