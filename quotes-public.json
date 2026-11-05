@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-05T02:22:08.650Z",
+ "updated": "2026-11-05T20:13:04.343130Z",
  "quotes": {
   "Photography": [
    {
@@ -114,6 +114,17 @@
     "price": 3460,
     "tax": 8.625,
     "inc": "Ceremony and cocktail hour\nQuartet (2 violins, viola and cello)",
+    "notes": ""
+   }
+  ],
+  "Additional entertainment": [
+   {
+    "id": "qgw4t5xbyyj",
+    "v": "Additional entertainment 1",
+    "c": "",
+    "price": 6700,
+    "tax": 8.625,
+    "inc": "A custom 20 ml fragrance for each guest, blended onsite with professional stylist guidance\nCustom bottle labels, with up to three designs for guests to choose from onsite\nGold or silver bottle caps, selected to suit your wedding style\nBlack or white gift bags, with tissue paper in up to three colour options\nCustom mirror vinyl, featuring your wedding branding or a meaningful message\nA complete styled setup, including fragrance materials, bottles, packaging, and our professional team\n2 stylists, 3 hrs continuous",
     "notes": ""
    }
   ]
