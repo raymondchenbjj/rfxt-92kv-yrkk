@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-05T01:58:33.296Z",
+ "updated": "2026-11-05T01:59:07.678Z",
  "quotes": {
   "Photography": [
    {
@@ -97,6 +97,17 @@
     "tax": 8.625,
     "inc": "DJ & MC (4 hours, reception)\nMC in Mandarin\nReception sound system\nAccess to curated playlists and app\nPlanning meeting\nTrucking labor, delivery, install and breakdown",
     "notes": "Preferred vendor at the venue (on The Mansion's recommended list)"
+   }
+  ],
+  "Live strings": [
+   {
+    "id": "qee0b6676bc",
+    "v": "Live strings 1",
+    "c": "",
+    "price": 1500,
+    "tax": 8.625,
+    "inc": "1 live string musician for cocktail hour\n1 live musician for the ceremony\nMic, mic stand and speaker included",
+    "notes": "Preferred vendor at the venue (on The Mansion's recommended list). Just one string player"
    }
   ]
  }
