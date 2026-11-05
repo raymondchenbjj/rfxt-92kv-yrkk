@@ -66,6 +66,9 @@ td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertic
 th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 a{color:var(--accent)}
+.hidebar{display:flex;justify-content:flex-end;margin:0 0 10px;font-size:13px;color:var(--muted)}
+.hidebar label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.hide-done ul.check li.is-done,.hide-done .phase.phase-done{display:none}
 .toolbar{display:flex;justify-content:center;gap:10px;margin-top:10px}
 .toolbar button{background:none;border:none;color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline}
 .cur h4{margin:12px 0 2px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
@@ -497,7 +500,7 @@ const phases = [
   ["Book band or DJ, plus bilingual MC","Consider the bilingual mashup singer",""],
   ["Hire florist and/or event decorator","",""],
   ["Decide if you still want an outside coordinator","Contract includes planning services and a day of coordinator",""],
-  ["Send out save the date cards","Through Zola, target week of Dec 7. Steps in the Save the Dates on Zola section below",""],
+  ["Send out save the date cards","Done: sent through Zola, Nov 2026",""],
   ["Choose the bridal party","",""],
   ["Take engagement photos","",""],
   ["Get the wedding dress","Done",""],
@@ -505,7 +508,7 @@ const phases = [
   ["Start a song list for ceremony and reception","",""],
   ["Consider honeymoon options","",""]
  ]},
- {id:"std", title:"Save the Dates on Zola", when:"Target send week of Dec 7, 2026 (about 6 months out)", due:new Date(2026,11,7), items:[
+ {id:"std", title:"Save the Dates on Zola", when:"Sent Nov 2026", due:new Date(2026,11,7), items:[
   ["Create a free Zola account and wedding profile","Guest list, Contact Collector and digital save the dates are free","Zola"],
   ["Add the bride's side to the invitation list","Added Nov 1: 25 invitations, about 50 people with family friends at 20",""],
   ["Fix the open headcounts on the list","Done Nov 1: family friends about 20; the other 6 entries are on the waitlist",""],
@@ -515,7 +518,7 @@ const phases = [
   ["Pick a design with the date, Glen Cove and the wedding website","Bilingual wording if it should match the invitations","Zola"],
   ["Send the save the dates","Before the December holidays, to Definitely Invited only. Waitlist gets one only if the count leaves room under 160","Zola"]
  ]},
- {m:7, items:[["Book hair and makeup artist","Top artists book up for June weekends; trial comes later",""],["Book rehearsal dinner venue","Can be held at the venue",""],["Decide on a qipao for the dinner change","Custom or tailored qipaos can take 6 to 10 weeks",""],["Order decor and rentals (chargers, specialty linens or chairs)","Venue already includes tables, standard chairs, floor length linens and the dance floor",""],["Hire officiant","",""]]},
+ {m:7, items:[["Book hair and makeup artist","Top artists book up for June weekends; trial comes later",""],["Book rehearsal dinner venue","Can be held at the venue",""],["Decide on a qipao for the dinner change","Done: qipao is in hand",""],["Order decor and rentals (chargers, specialty linens or chairs)","Venue already includes tables, standard chairs, floor length linens and the dance floor",""],["Hire officiant","",""]]},
  {m:6, items:[["Book transportation for you and guests","",""],["Meet invitation designers and finalize","Bilingual invitations",""],["Pick the rental styles for groomsmen and bridesmaids","Groomsmen in black tuxedos; bridesmaids in floor length dresses to match black tie",""]]},
  {m:5, items:[["Pay venue deposit 2: $10,482.50","Due Jan 13, 2027. 3% card fee applies","Contract"],["Book honeymoon","",""],["Reserve groom's white tuxedo and groomsmen's black tuxedos","Ivory/white dinner jacket with black tux trousers for the groom; ivory photographs warmer than stark white. Rental shops book up for June weekends",""],["Choose groom's bow tie and boutonniere to set him apart","e.g. a different bow tie color or texture, or one that ties to the qipao",""],["Reserve bridesmaid dress rentals","Floor length to match the groomsmen's black tuxedos",""],["Shop attire for flower girl and ring bearer","",""]]},
  {m:4, items:[["Hair and makeup trial","",""],["Buy wedding bands","",""],["Purchase ceremonial items and flat lays","",""],["Schedule tasting at the venue","",""]]},
@@ -549,6 +552,7 @@ if(!state._portal){state._portal=true;state["t_accept_venue_planning_platform_in
 if(!state._wcall){state._wcall=true;state["t_welcome_call"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._dep1){state._dep1=true;state["t_pay_venue_deposit_1_10_482_50"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._bride){state._bride=true;state["t_add_the_bride_s_side_to_the_invitation_list"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
+if(!state._std){state._std=true;["t_create_a_free_zola_account_and_wedding_profile","t_upload_the_invitation_list_to_zola","t_send_contact_collector_to_get_addresses_emails_and_phones","t_decide_digital_or_paper_save_the_dates","t_pick_a_design_with_the_date_glen_cove_and_the_wedding_website","t_send_the_save_the_dates","t_send_out_save_the_date_cards","t_decide_on_a_qipao_for_the_dinner_change"].forEach(k=>state[k]=true);try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 if(!state._wait){state._wait=true;state["t_fix_the_open_headcounts_on_the_list"]=true;try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}}
 const save=()=>{try{localStorage.setItem("wp-2027",JSON.stringify(state))}catch(e){}};
 const today=new Date(); today.setHours(0,0,0,0);
@@ -558,7 +562,8 @@ function li(key,text,note,src){
   return `<li class="${d?"is-done":""}"><input type="checkbox" id="${key}" ${d?"checked":""}><label for="${key}">${text}${src?`<span class="src">${src}</span>`:""}${note?`<span class="note">${note}</span>`:""}</label></li>`;
 }
 function render(){
-  let h="";
+  let h=`<div class="hidebar"><label><input type="checkbox" id="hideDone" ${state._hide?"checked":""}> Hide checked off items</label></div>`;
+  document.body.classList.toggle("hide-done",!!state._hide);
   phases.forEach((p,i)=>{
     let title=p.title, when=p.when, due=p.due;
     if(p.m){ due=new Date(2027,5-p.m,13); title=p.m+(p.m>1?" Months":" Month")+" Before"; when="By "+fmt(due); }
@@ -567,7 +572,7 @@ function render(){
     const all=keys.every(k=>state[k]);
     const days=(due-today)/864e5;
     const tag= all?'<span class="tag done">Done</span>': days<=14?'<span class="tag now">Now</span>': days<=75?'<span class="tag next">Up next</span>':'<span class="tag later">Later</span>';
-    h+=`<div class="phase"><div class="phase-h"><h2>${title}${tag}</h2><span class="when">${when}</span></div><ul class="check">`+
+    h+=`<div class="phase${all?" phase-done":""}"><div class="phase-h"><h2>${title}${tag}</h2><span class="when">${when}</span></div><ul class="check">`+
        p.items.map((it,j)=>li(keys[j],it[0],it[1],it[2])).join("")+`</ul></div>`;
   });
   document.getElementById("timeline").innerHTML=h;
@@ -583,6 +588,7 @@ function stats(){
   document.getElementById("days").textContent=Math.max(0,Math.ceil((WED-today)/864e5));
 }
 document.addEventListener("change",e=>{
+  if(e.target.id==="hideDone"){state._hide=e.target.checked;save();render();return;}
   if(e.target.matches("ul.check input")){state[e.target.id]=e.target.checked;save();render();}
 });
 document.getElementById("tabs").addEventListener("click",e=>{
