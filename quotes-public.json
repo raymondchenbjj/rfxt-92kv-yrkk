@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-01T22:11:35.901Z",
+ "updated": "2026-11-05T01:58:33.296Z",
  "quotes": {
   "Photography": [
    {
@@ -86,6 +86,17 @@
     "tax": 8.625,
     "inc": "4 hr reception\nProps\nUnlimited strips for guests\nExtra copy of strips for a scrapbook\nUSB of all digital files the same night",
     "notes": "Quoted Oct 22, 2026 alongside the photo package. $1,200 + tax"
+   }
+  ],
+  "Band or DJ": [
+   {
+    "id": "q35c1bbefd2",
+    "v": "Band or DJ 1",
+    "c": "",
+    "price": 3500,
+    "tax": 8.625,
+    "inc": "DJ & MC (4 hours, reception)\nMC in Mandarin\nReception sound system\nAccess to curated playlists and app\nPlanning meeting\nTrucking labor, delivery, install and breakdown",
+    "notes": "Preferred vendor at the venue (on The Mansion's recommended list)"
    }
   ]
  }
