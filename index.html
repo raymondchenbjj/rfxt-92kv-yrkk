@@ -677,13 +677,14 @@ function qSum(k){
 }
 function qRender(){
   qInit();
-  let done=0;
+  let done=0, picked=0;
   document.getElementById("qList").innerHTML=QCATS.map(([k])=>{
     const a=B.quotes[k], n=a.filter(qFilled).length, ch=B.qChosen[k];
     if(n>=3) done++;
+    if(ch!==undefined&&a[ch]&&qFilled(a[ch])) picked++;
     const prices=a.filter(qFilled).map(qAll), lo=prices.length?Math.min(...prices):0;
-    const fin=n>=3||(ch!==undefined&&a[ch]&&qFilled(a[ch])), op=QOPEN[k]!==undefined?QOPEN[k]:!fin;
-    return `<details class="qcat${fin?" fin":""}" data-qcat="${esc(k)}" ${op?"open":""}><summary><h3>${fin?'<span class="qok" title="Quotes done">&#10003;</span>':""}${k}</h3><span class="qs" data-qsum="${esc(k)}">${qSum(k)}</span></summary>
+    const fin=!!(ch!==undefined&&a[ch]&&qFilled(a[ch])), op=QOPEN[k]!==undefined?QOPEN[k]:!fin;
+    return `<details class="qcat${fin?" fin":""}" data-qcat="${esc(k)}" ${op?"open":""}><summary><h3>${fin?'<span class="qok" title="Vendor chosen">&#10003;</span>':""}${k}</h3><span class="qs" data-qsum="${esc(k)}">${qSum(k)}</span></summary>
       <div class="qgrid">`+a.map((q,i)=>`<div class="quote ${ch===i?"chosen":""}" data-qc="${esc(k)}" data-qi="${i}">
         <button class="x qx" data-qdel title="Remove from this view (a saved quote stays in the master file)">&times;</button>
         <label>Vendor<input data-qf="v" value="${esc(q.v)}" placeholder="Quote ${i+1}"></label>
@@ -694,7 +695,7 @@ function qRender(){
         <div class="acts"><div><label>All in</label><div class="allin" data-qall>${qFilled(q)?$f(qAll(q)):"\u2014"}</div></div><button class="choose" data-qchoose>${ch===i?"Chosen":"Choose"}</button></div>
       </div>`).join("")+`</div><div class="qfoot"><button class="addrow qadd" data-qadd="${esc(k)}">+ Add quote</button><button class="qsave" data-qsave="${esc(k)}" ${QBUSY[k]?"disabled":""}>${QBUSY[k]?"Saving\u2026":"Save Quotes"}</button><span class="qmsg ${QMSG[k]&&QMSG[k].bad?"bad":""}">${QMSG[k]?esc(QMSG[k].t):""}</span></div></details>`;
   }).join("");
-  const pr=document.getElementById("qProg"); pr.textContent=`${done} of ${QCATS.length} vendors have 3+ quotes`; pr.className="tag "+(done===QCATS.length?"done":"next");
+  const pr=document.getElementById("qProg"); pr.textContent=`${picked} of ${QCATS.length} vendors chosen \u00b7 ${done} have 3+ quotes`; pr.className="tag "+(picked===QCATS.length?"done":"next");
 }
 function qToBudget(k){
   const cat=QCATS.find(c=>c[0]===k); if(!cat) return;
@@ -716,7 +717,7 @@ document.getElementById("qList").addEventListener("click",e=>{
   const add=e.target.closest("[data-qadd]"); if(add){ B.quotes[add.dataset.qadd].push(blankQ()); bsave(); qRender(); return; }
   const box=e.target.closest(".quote"); if(!box) return;
   const k=box.dataset.qc, i=+box.dataset.qi;
-  if(e.target.closest("[data-qchoose]")){ B.qChosen[k]= B.qChosen[k]===i?undefined:i; if(B.qChosen[k]===undefined) delete B.qChosen[k]; qToBudget(k); bsave(); qRender(); }
+  if(e.target.closest("[data-qchoose]")){ B.qChosen[k]= B.qChosen[k]===i?undefined:i; if(B.qChosen[k]===undefined) delete B.qChosen[k]; QOPEN[k]=true; qToBudget(k); bsave(); qRender(); }
   else if(e.target.closest("[data-qdel]")){ B.quotes[k].splice(i,1); if(B.qChosen[k]===i){delete B.qChosen[k];qToBudget(k);} else if(B.qChosen[k]>i) B.qChosen[k]--; bsave(); qRender(); }
 });
 
