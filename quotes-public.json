@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-07T03:48:27.331830Z",
+ "updated": "2026-11-07T03:50:20.012060Z",
  "quotes": {
   "Photography": [
    {
@@ -135,10 +135,11 @@
     "notes": ""
    }
   ],
-  "Additional entertainment": [
+  "Additional entertainment": [],
+  "Favors": [
    {
     "id": "qgw4t5xbyyj",
-    "v": "Additional entertainment 1",
+    "v": "Favors 1",
     "c": "",
     "price": 6700,
     "tax": 8.625,
@@ -147,7 +148,7 @@
    },
    {
     "id": "q4la5f39gdq",
-    "v": "Additional entertainment 2",
+    "v": "Favors 2",
     "c": "",
     "price": 3300,
     "tax": 8.625,
